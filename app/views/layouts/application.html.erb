@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Omnisys</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+  <title>Omnisys</title>
+<body>
+
+        <div class="nav pull-right">
+          <% if current_user %> 
+            <p>Welcome <strong><%= current_user.email %> </strong> to your online management .</p>
+            <ul> 
+              <li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li> 
+              <li><%= link_to('PURCHASE',purchases_path)%></li>
+              <li><%= link_to('SALES',sales_path)%></li> 
+              </ul> 
+          <% else %> 
+           <center><strong><p>Welcome to online portal management.Log in to use this service</p></strong></center>   
+            <ul> 
+              <li><a href="/users/sign_in">Login</a></li> 
+              <li><a href="/users/sign_up">Signup</a></li>
+            </ul> 
+          <% end %>
+
+        </div>  
+    <%= yield %>
+
+</body>
+</html>

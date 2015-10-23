@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Purchases</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Wholesaler</th>
+      <th>Item name</th>
+      <th>Quantity</th>
+      <th>Unit of measure</th>
+      <th>Batch number</th>
+      <th>Expiry date</th>
+      <th>Date of purchase</th>
+      <th>Total price</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @purchases.each do |purchase| %>
+      <tr>
+        <td><%= purchase.wholesaler %></td>
+        <td><%= purchase.item_name %></td>
+        <td><%= purchase.quantity %></td>
+        <td><%= purchase.unit_of_measure %></td>
+        <td><%= purchase.batch_number %></td>
+        <td><%= purchase.expiry_date %></td>
+        <td><%= purchase.date_of_purchase %></td>
+        <td><%= purchase.total_price %></td>
+        <td><%= link_to 'Show', purchase %></td>
+        <td><%= link_to 'Edit', edit_purchase_path(purchase) %></td>
+        <td><%= link_to 'Destroy', purchase, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Purchase', new_purchase_path %>

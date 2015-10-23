@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  wholesaler: MyText
+  item_name: MyText
+  quantity: 1
+  unit_of_measure: MyText
+  batch_number: MyText
+  expiry_date: 2015-10-21
+  date_of_purchase: 2015-10-21
+  total_price: 1.5
+
+two:
+  wholesaler: MyText
+  item_name: MyText
+  quantity: 1
+  unit_of_measure: MyText
+  batch_number: MyText
+  expiry_date: 2015-10-21
+  date_of_purchase: 2015-10-21
+  total_price: 1.5

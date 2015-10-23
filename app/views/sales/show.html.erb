@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Customer:</strong>
+  <%= @sale.customer %>
+</p>
+
+<p>
+  <strong>Item name:</strong>
+  <%= @sale.item_name %>
+</p>
+
+<p>
+  <strong>Quantity:</strong>
+  <%= @sale.quantity %>
+</p>
+
+<p>
+  <strong>Unit of measure:</strong>
+  <%= @sale.unit_of_measure %>
+</p>
+
+<p>
+  <strong>Batch number:</strong>
+  <%= @sale.batch_number %>
+</p>
+
+<p>
+  <strong>Expiry date:</strong>
+  <%= @sale.expiry_date %>
+</p>
+
+<p>
+  <strong>Date of purchase:</strong>
+  <%= @sale.date_of_purchase %>
+</p>
+
+<p>
+  <strong>Total price:</strong>
+  <%= @sale.total_price %>
+</p>
+
+<%= link_to 'Edit', edit_sale_path(@sale) %> |
+<%= link_to 'Back', sales_path %>

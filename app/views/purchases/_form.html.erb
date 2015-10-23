@@ -1,0 +1,49 @@
+<%= form_for(@purchase) do |f| %>
+  <% if @purchase.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@purchase.errors.count, "error") %> prohibited this purchase from being saved:</h2>
+
+      <ul>
+      <% @purchase.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :wholesaler %><br>
+    <%= f.text_area :wholesaler %>
+  </div>
+  <div class="field">
+    <%= f.label :item_name %><br>
+    <%= f.text_area :item_name %>
+  </div>
+  <div class="field">
+    <%= f.label :quantity %><br>
+    <%= f.number_field :quantity %>
+  </div>
+  <div class="field">
+    <%= f.label :unit_of_measure %><br>
+    <%= f.text_area :unit_of_measure %>
+  </div>
+  <div class="field">
+    <%= f.label :batch_number %><br>
+    <%= f.text_area :batch_number %>
+  </div>
+  <div class="field">
+    <%= f.label :expiry_date %><br>
+    <%= f.date_select :expiry_date %>
+  </div>
+  <div class="field">
+    <%= f.label :date_of_purchase %><br>
+    <%= f.date_select :date_of_purchase %>
+  </div>
+  <div class="field">
+    <%= f.label :total_price %><br>
+    <%= f.text_field :total_price %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
