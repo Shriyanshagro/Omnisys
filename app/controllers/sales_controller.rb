@@ -25,17 +25,6 @@ class SalesController < ApplicationController
 
   # POST /sales
   # POST /sales.json
-   def item_update(@sale)
-        @item_list= Item.where("user_id = ? and item_name = ?" ,  current_user.id , @sale.item_name )
-        if @item_list.nil?
-          Item.create(:item_name => @sale.item_name , :quantity => @sale.quantity , :user_id => current_user.id)
-        else
-          @item_list.quantity = @item_list.quantity - @sale.quantity
-          Item.update_columns(:quantity => @item_list.quantity).where("user_id = ? and item_name = ?" ,  current_user.id , @sale.item_name)
-
-        end    
-        
-   end
 
   def create
     @sale = Sale.new(sale_params)
@@ -45,7 +34,6 @@ class SalesController < ApplicationController
         format.html { redirect_to @sale, notice: 'Sale was successfully created.' }
         format.json { render :show, status: :created, location: @sale }
         
-        item_update(@sale)
         
       else
         format.html { render :new }
