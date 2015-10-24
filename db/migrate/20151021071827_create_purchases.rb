@@ -1,6 +1,5 @@
 class CreatePurchases < ActiveRecord::Migration
   def change
-    drop_table :purchases
     create_table :purchases do |t|
       t.text :wholesaler
       t.text :item_name
