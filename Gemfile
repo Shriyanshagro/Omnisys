@@ -33,7 +33,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
-
  gem 'rails_12factor', '0.0.2'	#for heroku
 
 group :development, :test do
