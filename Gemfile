@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle install user authentication
-gem ruby '2.0.0'
+gem 'ruby', '2.0.0'
 gem 'devise', '~> 3.4.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.4'
