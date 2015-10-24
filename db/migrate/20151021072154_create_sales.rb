@@ -1,6 +1,5 @@
 class CreateSales < ActiveRecord::Migration
   def change
-    drop_table :sales
     create_table :sales do |t|
       t.text :customer
       t.text :item_name

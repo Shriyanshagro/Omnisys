@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle install user authentication
+gem ruby '2.0.0'
 gem 'devise', '~> 3.4.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.4'
@@ -33,6 +34,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+ gem 'rails_12factor', '0.0.2'	#for heroku
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
@@ -48,6 +51,5 @@ end
 
 group :production do
   gem 'pg',             '0.17.1' #for heroku
-  gem 'rails_12factor', '0.0.2'	#for heroku
 end
 
