@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Item name:</strong>
+  <%= @stock.item_name %>
+</p>
+
+<p>
+  <strong>Unit of measure:</strong>
+  <%= @stock.unit_of_measure %>
+</p>
+
+<p>
+  <strong>Batch number:</strong>
+  <%= @stock.batch_number %>
+</p>
+
+<p>
+  <strong>Quantity:</strong>
+  <%= @stock.quantity %>
+</p>
+
+<p>
+  <strong>Expiry date:</strong>
+  <%= @stock.expiry_date %>
+</p>
+
+<%= link_to 'Edit', edit_stock_path(@stock) %> |
+<%= link_to 'Back', stocks_path %>

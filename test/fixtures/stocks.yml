@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  item_name: MyText
+  unit_of_measure: MyText
+  batch_number: MyText
+  quantity: 1
+  expiry_date: 2015-10-27
+
+two:
+  item_name: MyText
+  unit_of_measure: MyText
+  batch_number: MyText
+  quantity: 1
+  expiry_date: 2015-10-27
