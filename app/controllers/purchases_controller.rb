@@ -30,15 +30,29 @@ class PurchasesController < ApplicationController
     respond_to do |format|
       if @purchase.save
         format.html { redirect_to @purchase, notice: 'Purchase was successfully created.' }
-        format.html { redirect_to @purchase, notice: 'Purchase was successfully created.' }
         format.json { render :show, status: :created, location: @purchase }
+
+        @stock_list= Stock.where("user_id = ? and item_name = ? and batch_no = ? and  unit_of_measure = ?" ,
+          current_user.id , @purchase.item_name ,@purchase.batch_number ,@purchase.unit_of_measure)
+        
+        if @stock_list.nil?  # ==false
+          Stock.update_columns(:quantity => @newstock_list.quantity).where("user_id = ? and item_name = ? and
+            batch_number = ? and  unit_of_measure = ?" ,current_user.id , @purchase.item_name ,@purchase.batch_number,
+            @purchase.unit_of_measure)
+        
+        else
+          Stock.create(:item_name => @purchase.item_name , :quantity => @purchase.quantity ,
+           :user_id => current_user.id, :batch_number => @purchase.batch_number , 
+           :expiry_date => @purchase.expiry_date , :unit_of_measure => @purchase.unit_of_measure
+            )
+
+        end  
+
       else
         format.html { render :new }
         format.json { render json: @purchase.errors, status: :unprocessable_entity }
       end
  
-    @item_list= Item.where("user_id = ? and item_name = ?" ,  current_user.id , @purchase.item_name )
-    @item_list.quantity += @purchase.quantity
     end
   end
 

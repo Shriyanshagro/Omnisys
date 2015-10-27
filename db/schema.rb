@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151024104340) do
+ActiveRecord::Schema.define(version: 20151027122734) do
 
   create_table "masters", force: :cascade do |t|
     t.datetime "created_at",               null: false
@@ -53,13 +53,14 @@ ActiveRecord::Schema.define(version: 20151024104340) do
   end
 
   create_table "stocks", force: :cascade do |t|
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
     t.text     "item_name",       limit: 65535
-    t.text     "batch_no",        limit: 65535
     t.text     "unit_of_measure", limit: 65535
+    t.text     "batch_number",    limit: 65535
     t.integer  "quantity",        limit: 4
     t.date     "expiry_date"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.integer  "user_id",         limit: 4
   end
 
   create_table "users", force: :cascade do |t|

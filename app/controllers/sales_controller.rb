@@ -26,6 +26,7 @@ class SalesController < ApplicationController
   # POST /sales
   # POST /sales.json
 
+ 
   def create
     @sale = Sale.new(sale_params)
     @sale.user_id = current_user.id
@@ -33,7 +34,14 @@ class SalesController < ApplicationController
       if @sale.save
         format.html { redirect_to @sale, notice: 'Sale was successfully created.' }
         format.json { render :show, status: :created, location: @sale }
-        
+
+        @stock_list= Stock.where("user_id = ? and item_name = ? and batch_no = ? " ,  current_user.id ,
+         @sale.item_name ,@sale.batch_number)
+
+#        @stock_list.quantity = @stock_list.quantity - @sale.quantity
+        Stock.update_columns(:quantity => sale.quantity).where("user_id = ? and item_name = ? and 
+            batch_no = ?" ,  current_user.id , @sale.item_name ,@sale.batch_number)
+
         
       else
         format.html { render :new }
