@@ -30,27 +30,54 @@ class SalesController < ApplicationController
   def create
     @sale = Sale.new(sale_params)
     @sale.user_id = current_user.id
+
+    #Now various validations
+
+    # check weather given inputs are valid or not
+    validate = Master.find_by(item_name: @sale.item_name , uom: @sale.unit_of_measure) 
+    stock = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name ,
+         batch_number: @sale.batch_number ,unit_of_measure: @sale.unit_of_measure ,
+          expiry_date: @sale.expiry_date) # find the required item in stock
+
+    # logic to find least count of quantity
+    $i=1
+    $total=1
+    while $i <= validate.level
+       factor = Master.find_by(item_name: @sale.item_name , level: $i)
+       $total *= factor.units*factor.conversion
+       $i += 1
+    end   
+
+
     respond_to do |format|
-      if @sale.save
+     if @sale.quantity<=0
+        format.html { redirect_to @sale, notice: 'Given quantity is not acceptable.' }
+             
+     elsif !validate.present?
+        format.html { redirect_to @sale, notice: 'Give correct Item name and corresponding Unit Of measure.' }
+         
+     elsif !stock.present?
+        format.html { redirect_to @sale, notice: 'Given Item and corresponding Unit Of Measure is never purchased.' }
+      
+     elsif stock.quantity < @sale.quantity*$total
+        format.html { redirect_to @sale, notice: 'Required quantity is not available in stock' }
+
+     else 
+         if @sale.save
         format.html { redirect_to @sale, notice: 'Sale was successfully created.' }
         format.json { render :show, status: :created, location: @sale }
 
-        @stock_list= Stock.where("user_id = ? and item_name = ? and batch_no = ? " ,  current_user.id ,
-         @sale.item_name ,@sale.batch_number)
+        # method to update stock if any item got saled
+          stock.quantity = stock.quantity - @sale.quantity*$total  
+          stock.save
 
-#        @stock_list.quantity = @stock_list.quantity - @sale.quantity
-        Stock.update_columns(:quantity => sale.quantity).where("user_id = ? and item_name = ? and 
-            batch_no = ?" ,  current_user.id , @sale.item_name ,@sale.batch_number)
-
-        
+    
       else
         format.html { render :new }
         format.json { render json: @sale.errors, status: :unprocessable_entity }
       end
-    
-    
+     end 
     end
-      
   end
 
   # PATCH/PUT /sales/1
@@ -70,6 +97,16 @@ class SalesController < ApplicationController
   # DELETE /sales/1
   # DELETE /sales/1.json
   def destroy
+    # method to update stock when sale got destroyed.
+    stock = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name ,
+       batch_number: @sale.batch_number )
+
+    if stock.present?
+        stock.quantity = stock.quantity + @sale.quantity  
+        stock.save
+
+    end
+
     @sale.destroy
     respond_to do |format|
       format.html { redirect_to sales_url, notice: 'Sale was successfully destroyed.' }

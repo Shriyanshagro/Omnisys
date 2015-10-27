@@ -12,18 +12,24 @@
         <div class="nav pull-right">
           <% if current_user %> 
             <p>Welcome <strong><%= current_user.email %> </strong> to your online management .</p>
-            <ul> 
-              <li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li> 
-              <li><%= link_to('PURCHASE',purchases_path)%></li>
-              <li><%= link_to('SALES',sales_path)%></li> 
-              <li><%= link_to('STOCKS',stocks_path)%></li> 
-              </ul> 
+            <table>
+              
+            <tr> 
+              <th><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></th> 
+              <th><%= link_to('PURCHASE',purchases_path)%></th>
+              <th><%= link_to('SALES',sales_path)%></th> 
+              <th><%= link_to('STOCKS',stocks_path)%></th> 
+            </tr> 
+          </table>
+
           <% else %> 
            <center><strong><p>Welcome to online portal management.Log in to use this service</p></strong></center>   
-            <ul> 
-              <li><a href="/users/sign_in">Login</a></li> 
-              <li><a href="/users/sign_up">Signup</a></li>
-            </ul> 
+            <table>
+             <tr> 
+              <th><a href="/users/sign_in">Login</a></th> 
+              <th><a href="/users/sign_up">Signup</a></th>
+             </tr>
+           </table>  
           <% end %>
 
         </div>  

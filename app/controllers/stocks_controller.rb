@@ -15,6 +15,7 @@ class StocksController < ApplicationController
 
   # GET /stocks/new
   def new
+    @stock = Stock.new
 
   end  
   # GET /stocks/1/edit
@@ -23,6 +24,21 @@ class StocksController < ApplicationController
 
   # POST /stocks
   # POST /stocks.json
+  def create
+    @stock = Stock.new(purchase_params)
+    @stock.user_id = current_user.id
+    respond_to do |format|
+      if @stock.save
+        format.html { redirect_to @stock, notice: 'Purchase was successfully created.' }
+        format.json { render :show, status: :created, location: @stock }
+
+      else
+        format.html { render :new }
+        format.json { render json: @stock.errors, status: :unprocessable_entity }
+      end
+ 
+    end
+  end
  
   # PATCH/PUT /stocks/1
   # PATCH/PUT /stocks/1.json
