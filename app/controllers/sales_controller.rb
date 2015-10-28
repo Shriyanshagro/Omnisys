@@ -40,15 +40,7 @@ class SalesController < ApplicationController
     stock = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name ,
          batch_number: @sale.batch_number ) 
 
-    # logic to find least count of quantity
-    $i=1
-    $total=1
-    while $i <= validate.level
-       factor = Master.find_by(item_name: @sale.item_name , level: $i)
-       $total *= factor.units*factor.conversion
-       $i += 1
-    end   
-
+    
 
     respond_to do |format|
      if @sale.quantity<=0
@@ -65,7 +57,15 @@ class SalesController < ApplicationController
   #      format.html { redirect_to @sale, notice: 'Required quantity is not available in stock' }
 
      else 
-         if @sale.save
+      # logic to find least count of quantity
+      $i=1
+      $total=1
+      while $i <= validate.level
+       factor = Master.find_by(item_name: @sale.item_name , level: $i)
+       $total *= factor.units*factor.conversion
+       $i += 1
+      end   
+      if @sale.save
         format.html { redirect_to @sale, notice: 'Sale was successfully created.' }
         format.json { render :show, status: :created, location: @sale }
 
