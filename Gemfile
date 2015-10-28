@@ -51,3 +51,4 @@ group :production do
   gem 'pg',             '0.17.1' #for heroku
 end
 
+ruby "2.2.0"

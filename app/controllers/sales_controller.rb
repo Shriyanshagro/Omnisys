@@ -33,11 +33,12 @@ class SalesController < ApplicationController
 
     #Now various validations
 
-    # check weather given inputs are valid or not
+    #find weather given item and uom matches to master table
     validate = Master.find_by(item_name: @sale.item_name , uom: @sale.unit_of_measure) 
+
+    # find the required item in stock
     stock = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name ,
-         batch_number: @sale.batch_number ,unit_of_measure: @sale.unit_of_measure ,
-          expiry_date: @sale.expiry_date) # find the required item in stock
+         batch_number: @sale.batch_number ) 
 
     # logic to find least count of quantity
     $i=1
@@ -59,8 +60,9 @@ class SalesController < ApplicationController
      elsif !stock.present?
         format.html { redirect_to @sale, notice: 'Given Item and corresponding Unit Of Measure is never purchased.' }
       
-     elsif stock.quantity < @sale.quantity*$total
-        format.html { redirect_to @sale, notice: 'Required quantity is not available in stock' }
+      # as specified retailer can sale product even if item's quantity is less than required
+ #    elsif stock.quantity < @sale.quantity*$total
+  #      format.html { redirect_to @sale, notice: 'Required quantity is not available in stock' }
 
      else 
          if @sale.save

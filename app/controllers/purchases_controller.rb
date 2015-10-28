@@ -28,7 +28,7 @@ class PurchasesController < ApplicationController
     @purchase = Purchase.new(purchase_params)
     @purchase.user_id = current_user.id
 
-    #various validations
+    #find weather given item and uom matches to master table
     validate = Master.find_by(item_name: @purchase.item_name , uom: @purchase.unit_of_measure)
     
     # logic to find least count of quantity
@@ -39,6 +39,9 @@ class PurchasesController < ApplicationController
        $total *= factor.units*factor.conversion
        $i += 1
     end   
+
+    # to find the unit_of_measure of least level
+    factor = Master.find_by(item_name: @purchase.item_name , level: 1)
 
     respond_to do |format|
      if @purchase.quantity<=0
@@ -54,7 +57,7 @@ class PurchasesController < ApplicationController
 
         # method to update stock if any item got purchased
         stock = Stock.find_by(user_id: current_user.id , item_name: @purchase.item_name ,
-         batch_number: @purchase.batch_number , unit_of_measure: @purchase.unit_of_measure)
+         batch_number: @purchase.batch_number )
 
         if stock.present?
 
@@ -62,7 +65,7 @@ class PurchasesController < ApplicationController
           stock.save
         else  
           stock=Stock.create(user_id: current_user.id , item_name: @purchase.item_name ,
-         batch_number: @purchase.batch_number ,unit_of_measure: @purchase.unit_of_measure , 
+         batch_number: @purchase.batch_number ,unit_of_measure: factor.uom , 
          expiry_date: @purchase.expiry_date , quantity:@purchase.quantity*$total)
 
         end
