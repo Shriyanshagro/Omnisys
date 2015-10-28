@@ -37,7 +37,7 @@ class PurchasesController < ApplicationController
 
     respond_to do |format|
      if @purchase.quantity<=0
-        format.html { redirect_to new_purchase_path, notice: 'Given quantity is not acceptable.' }
+        format.html { redirect_to @purchase, notice: 'Given quantity is not acceptable.' }
              
      elsif !validate.present?
         format.html { redirect_to @purchase, notice: 'Give correct Item name and corresponding Unit Of measure.' }
