@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Item name:</strong>
+  <%= @master.item_name %>
+</p>
+
+<p>
+  <strong>Uom:</strong>
+  <%= @master.uom %>
+</p>
+
+<p>
+  <strong>Units:</strong>
+  <%= @master.units %>
+</p>
+
+<p>
+  <strong>Level:</strong>
+  <%= @master.level %>
+</p>
+
+<p>
+  <strong>Conversion:</strong>
+  <%= @master.conversion %>
+</p>
+
+<p>
+  <strong>Mrp:</strong>
+  <%= @master.mrp %>
+</p>
+
+<%= link_to 'Edit', edit_master_path(@master) %> |
+<%= link_to 'Back', masters_path %>
