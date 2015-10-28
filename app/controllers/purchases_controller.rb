@@ -31,15 +31,7 @@ class PurchasesController < ApplicationController
     #find weather given item and uom matches to master table
     validate = Master.find_by(item_name: @purchase.item_name , uom: @purchase.unit_of_measure)
     
-    # logic to find least count of quantity
-    $i=1
-    $total=1
-    while $i <= validate.level
-       factor = Master.find_by(item_name: @purchase.item_name , level: $i)
-       $total *= factor.units*factor.conversion
-       $i += 1
-    end   
-
+    
     # to find the unit_of_measure of least level
     factor = Master.find_by(item_name: @purchase.item_name , level: 1)
 
@@ -51,6 +43,14 @@ class PurchasesController < ApplicationController
         format.html { redirect_to @purchase, notice: 'Give correct Item name and corresponding Unit Of measure.' }
          
      else
+       # logic to find least count of quantity
+       $i=1
+       $total=1
+       while $i <= validate.level
+       factor = Master.find_by(item_name: @purchase.item_name , level: $i)
+       $total *= factor.units*factor.conversion
+       $i += 1
+       end   
        if @purchase.save
         format.html { redirect_to @purchase, notice: 'Purchase was successfully created.' }
         format.json { render :show, status: :created, location: @purchase }
