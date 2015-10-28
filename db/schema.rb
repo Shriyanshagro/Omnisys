@@ -11,17 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151027122734) do
+ActiveRecord::Schema.define(version: 20151028134443) do
 
   create_table "masters", force: :cascade do |t|
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
     t.text     "item_name",  limit: 65535
     t.text     "uom",        limit: 65535
     t.integer  "units",      limit: 4
     t.integer  "level",      limit: 4
     t.integer  "conversion", limit: 4
     t.float    "mrp",        limit: 24
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   create_table "purchases", force: :cascade do |t|
