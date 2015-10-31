@@ -6,26 +6,31 @@ class MastersController < ApplicationController
   # GET /masters
   # GET /masters.json
   def index
+  check()
     @masters = Master.all
   end
 
   # GET /masters/1
   # GET /masters/1.json
   def show
+    check()
   end
 
   # GET /masters/new
   def new
+    check()
     @master = Master.new
   end
 
   # GET /masters/1/edit
   def edit
+    check()
   end
 
   # POST /masters
   # POST /masters.json
   def create
+    check()
     @master = Master.new(master_params)
 
     respond_to do |format|
@@ -42,6 +47,7 @@ class MastersController < ApplicationController
   # PATCH/PUT /masters/1
   # PATCH/PUT /masters/1.json
   def update
+    check()
     respond_to do |format|
       if @master.update(master_params)
         format.html { redirect_to @master, notice: 'Master was successfully updated.' }
@@ -56,6 +62,7 @@ class MastersController < ApplicationController
   # DELETE /masters/1
   # DELETE /masters/1.json
   def destroy
+    check()
     @master.destroy
     respond_to do |format|
       format.html { redirect_to masters_url, notice: 'Master was successfully destroyed.' }
@@ -72,6 +79,13 @@ class MastersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def master_params
       params.require(:master).permit(:item_name, :uom, :units, :level, :conversion, :mrp)
+    end
+
+    # global method for authentication
+    def check
+        if current_user.id!=1   
+          redirect_to controller: 'purchases', action: 'index' 
+        end
     end
 
 end

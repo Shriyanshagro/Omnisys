@@ -117,6 +117,10 @@ class SalesController < ApplicationController
   end
 
   private
+    def access
+          redirect_to controller: 'sales', action: 'index' 
+    end  
+
     # Use callbacks to share common setup or constraints between actions.
     def set_sale
       @sale = Sale.find(params[:id])
@@ -126,4 +130,5 @@ class SalesController < ApplicationController
     def sale_params
       params.require(:sale).permit(:customer, :item_name, :quantity, :unit_of_measure, :batch_number, :expiry_date, :date_of_purchase, :total_price)
     end
+
 end
