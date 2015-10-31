@@ -20,6 +20,7 @@ class StocksController < ApplicationController
   end  
   # GET /stocks/1/edit
   def edit
+    check
   end
 
   # POST /stocks
@@ -64,6 +65,22 @@ class StocksController < ApplicationController
     end
   end
 
+  def report
+
+    if params[:q].present?
+      @stocks = Stock.where("user_id = ?" ,  current_user.id)
+      @stocks = @stocks.where("item_name = ?" ,params[:q]).all
+      if @stocks.present?
+        @average = Report.where("user_id = ?" ,  current_user.id)
+        @average = @average.where("item_name = ?" , params[:q])
+      else
+        respond_to do |format|
+          format.html { redirect_to report_stocks_path, notice: "Sorry given item doesn't exist ." }
+        end
+      end
+    end  
+  end
+    
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_stock
@@ -74,4 +91,10 @@ class StocksController < ApplicationController
     def stock_params
       params.require(:stock).permit(:item_name, :unit_of_measure, :batch_number, :quantity, :expiry_date)
     end
+
+    def check
+      respond_to do |format|
+          format.html { redirect_to stocks_path, notice: "Sorry you don't have access for this page ." }
+    end
+  end      
 end

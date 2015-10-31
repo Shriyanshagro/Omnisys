@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
   resources :masters
-  resources :stocks
+  resources :stocks do
+    #to pass without any id we use collection
+    collection  do
+      get 'report' 
+    end
+  end     
   resources :sales
   resources :purchases
   devise_for :users

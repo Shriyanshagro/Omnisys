@@ -63,12 +63,23 @@ class PurchasesController < ApplicationController
 
           stock.quantity = stock.quantity + @purchase.quantity*$total  
           stock.save
+
         else  
           stock=Stock.create(user_id: current_user.id , item_name: @purchase.item_name ,
          batch_number: @purchase.batch_number ,unit_of_measure: factor.uom , 
          expiry_date: @purchase.expiry_date , quantity:@purchase.quantity*$total)
 
         end
+
+        report = Report.find_by(item_name: @purchase.item_name , user_id: current_user.id)
+        if report.present? 
+          report.value = (@purchase.total_price + report.value*report.quantity)/(@purchase.quantity*$total + report.quantity)
+          report.quantity = report.quantity + @purchase.quantity*$total
+          report.save
+        else
+          report=Report.create(user_id:current_user.id , item_name:@purchase.item_name,value:(@purchase.total_price/(@purchase.quantity*$total)),
+          quantity:@purchase.quantity*$total)
+        end  
 
       else
         format.html { render :new }
