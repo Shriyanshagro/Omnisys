@@ -1,0 +1,39 @@
+
+<p id="notice"><%= notice %></p>
+
+<h1>Report</h1>
+<hr>
+
+<%= form_tag({controller: "stocks", action: "report"}, method: "get") do %>
+  <%= label_tag(:q, "Search for:") %>
+  <%= text_field_tag(:q) %>
+  <%= submit_tag("Search") %>
+<% end %>
+
+<%if @average and @stocks%>
+<% @average.each do |average| %>
+<p>Item Name = <%= average.item_name%> , Average Value = <%= average.value%></p>
+<%end%>
+<table>
+  <thead>
+    <tr>
+      <th>Batch number</th>
+      <th>Quantity</th>
+      <th>Expiry date</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @stocks.each do |stock| %>
+      <tr>
+        <td><%= stock.batch_number %></td>
+        <td><%= stock.quantity %></td>
+        <td><%= stock.expiry_date %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+<% end%>
