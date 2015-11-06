@@ -3,9 +3,11 @@ Rails.application.routes.draw do
   resources :stocks do
     #to pass without any id we use collection
     collection  do
-      get 'report' 
+      get 'report'
+      get 'correct'
+      post 'correct'
     end
-  end     
+  end
   resources :sales
   resources :purchases
   devise_for :users

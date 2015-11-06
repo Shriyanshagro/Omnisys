@@ -17,7 +17,7 @@ class StocksController < ApplicationController
   def new
     @stock = Stock.new
 
-  end  
+  end
   # GET /stocks/1/edit
   def edit
     check
@@ -37,10 +37,10 @@ class StocksController < ApplicationController
         format.html { render :new }
         format.json { render json: @stock.errors, status: :unprocessable_entity }
       end
- 
+
     end
   end
- 
+
   # PATCH/PUT /stocks/1
   # PATCH/PUT /stocks/1.json
   def update
@@ -78,9 +78,57 @@ class StocksController < ApplicationController
           format.html { redirect_to report_stocks_path, notice: "Sorry given item doesn't exist ." }
         end
       end
-    end  
+    end
   end
-    
+
+  def correct
+      @stocks = Stock.where("user_id = ?" ,  current_user.id).ids
+      $count = 0
+
+        for $i in @stocks
+          if params[:@stocks][:stock][:"#{$i}"][:item_name].present?
+              $time = Time.now
+              # find the requires row in Stock db
+              data = Stock.find("#{$i}")
+              # find the average value of product
+              $value = Report.find_by(item_name: data.item_name , user_id: current_user.id)
+              $value = $value.value
+              # condition to choose weather to make sale or purchase
+              if data.quantity > params[:@stocks][:stock][:"#{$i}"][:item_name].to_f
+                  # .to_f function changes a string to integer
+                  $count+=1
+                  stock=Sale.create(customer:"Stock Correction",user_id: current_user.id , item_name: data.item_name ,
+                  batch_number: data.batch_number ,unit_of_measure: data.unit_of_measure ,
+                  expiry_date: data.expiry_date , quantity:(data.quantity - params[:@stocks][:stock][:"#{$i}"][:item_name].to_f),date_of_purchase:"#{$time}",total_price:$value*(data.quantity - params[:@stocks][:stock][:"#{$i}"][:item_name].to_f))
+
+                  data.quantity= params[:@stocks][:stock][:"#{$i}"][:item_name].to_f
+                  data.save
+
+              elsif data.quantity < params[:@stocks][:stock][:"#{$i}"][:item_name].to_f
+                  $count+=1
+                  stock=Purchase.create(wholesaler:"Stock Correction",user_id: current_user.id , item_name: data.item_name ,
+                  batch_number: data.batch_number ,unit_of_measure: data.unit_of_measure ,
+                  expiry_date: data.expiry_date , quantity:(params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity ),date_of_purchase:"#{$time}" , total_price: $value*(params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity))
+
+                  data.quantity= params[:@stocks][:stock][:"#{$i}"][:item_name].to_f
+                  data.save
+
+              end
+
+          end
+       end
+        if $count>0
+          respond_to do |format|
+              format.html { redirect_to stocks_path, notice: "Stock has been updated ." }
+          end
+        else
+            respond_to do |format|
+                format.html { redirect_to stocks_path, notice: "No change in stocks ." }
+            end
+        end
+
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_stock
@@ -96,5 +144,5 @@ class StocksController < ApplicationController
       respond_to do |format|
           format.html { redirect_to stocks_path, notice: "Sorry you don't have access for this page ." }
     end
-  end      
+  end
 end
