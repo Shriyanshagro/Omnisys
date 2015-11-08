@@ -1,1 +1,1 @@
-web : bundle exec rake db:migrate
+web : rake db:migrate
