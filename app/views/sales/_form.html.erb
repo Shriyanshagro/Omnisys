@@ -13,11 +13,11 @@
 
   <div class="field">
     <%= f.label :customer %><br>
-    <%= f.text_area :customer %>
+    <input name="sale[customer]" id="tags" type="text" onkeyup="getcustomer()" ,limit = '2'>
   </div>
   <div class="field">
     <%= f.label :item_name %><br>
-    <%= f.text_area :item_name %>
+    <input name="sale[item_name]" id="items" type="text" onkeyup="getitem()" ,limit = '2'>
   </div>
   <div class="field">
     <%= f.label :quantity %><br>
@@ -47,3 +47,23 @@
     <%= f.submit %>
   </div>
 <% end %>
+
+<script>
+
+function getcustomer() {
+  $.get("<%= url_for(controller: 'sales', action: 'customer') %>", function(data, status){
+      $( "#tags" ).autocomplete({
+        source: data
+      });
+  });
+};
+
+function getitem() {
+  $.get("<%= url_for(controller: 'sales', action: 'item') %>", function(data, status){
+      $( "#items" ).autocomplete({
+        source: data
+      });
+  });
+};
+
+</script>

@@ -61,7 +61,6 @@ function getwholeseller() {
 
 function getitem() {
     $.get("<%= url_for(controller: 'purchases', action: 'item') %>", function(data, status){
-        a=data.length;
         $( "#items" ).autocomplete({
           source: data
         });
@@ -69,4 +68,3 @@ function getitem() {
 };
 
 </script>
-

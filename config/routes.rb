@@ -8,7 +8,12 @@ Rails.application.routes.draw do
       post 'correct'
     end
   end
-  resources :sales
+  resources :sales do
+      collection do
+          get 'customer'
+          get 'item'
+      end
+  end
   resources :purchases do
       collection do
           get 'wholesaler'
@@ -17,7 +22,7 @@ Rails.application.routes.draw do
   end
   devise_for :users
 
-  root 'purchases#index'
+  root 'stocks#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -73,4 +78,3 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 end
-
