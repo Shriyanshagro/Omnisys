@@ -99,6 +99,14 @@ class PurchasesController < ApplicationController
      render json: @item
   end
 
+  def uom
+      if params[:name].present?
+            @uom = Master.where("item_name = ?" , params[:name]).distinct.pluck(:uom)
+            render json: @uom
+      end
+
+  end
+
   # PATCH/PUT /purchases/1
   # PATCH/PUT /purchases/1.json
   def update
@@ -149,4 +157,3 @@ class PurchasesController < ApplicationController
       params.require(:purchase).permit(:wholesaler, :item_name, :quantity, :unit_of_measure, :batch_number, :expiry_date, :date_of_purchase, :total_price)
     end
 end
-

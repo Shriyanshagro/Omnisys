@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       get 'report'
       get 'correct'
       post 'correct'
+      get 'batch'
     end
   end
   resources :sales do
@@ -18,6 +19,7 @@ Rails.application.routes.draw do
       collection do
           get 'wholesaler'
           get 'item'
+          get 'uom'
       end
   end
   devise_for :users

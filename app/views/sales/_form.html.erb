@@ -23,13 +23,15 @@
     <%= f.label :quantity %><br>
     <%= f.number_field :quantity %>
   </div>
+
   <div class="field">
     <%= f.label :unit_of_measure %><br>
-    <%= f.text_area :unit_of_measure %>
+    <input name="sale[unit_of_measure]" id="uom" type="text" onkeyup="getuom()" ,limit = '2'>
   </div>
+
   <div class="field">
     <%= f.label :batch_number %><br>
-    <%= f.text_area :batch_number %>
+    <input name="sale[batch_number]" id="batch" type="text" onkeyup="getbatch()" ,limit = '2'>
   </div>
   <div class="field">
     <%= f.label :expiry_date %><br>
@@ -51,7 +53,7 @@
 <script>
 
 function getcustomer() {
-  $.get("<%= url_for(controller: 'sales', action: 'customer') %>", function(data, status){
+  $.get("<%= url_for(controller: 'sales', action: 'customer' , ) %>", function(data, status){
       $( "#tags" ).autocomplete({
         source: data
       });
@@ -66,4 +68,23 @@ function getitem() {
   });
 };
 
+function getuom() {
+    item = document.getElementById("items").value
+    $.get("<%= url_for(controller: 'purchases', action: 'uom' ,name:"") %>"+item , function(data, status){
+          console.log(data);
+        $( "#uom" ).autocomplete({
+          source: data
+        });
+    });
+};
+
+function getbatch() {
+    item = document.getElementById("items").value
+    $.get("<%= url_for(controller: 'stocks', action: 'batch' ,name:"") %>"+item , function(data, status){
+          console.log(data);
+        $( "#batch" ).autocomplete({
+          source: data
+        });
+    });
+};
 </script>

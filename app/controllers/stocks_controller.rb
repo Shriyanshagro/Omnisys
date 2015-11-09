@@ -23,6 +23,11 @@ class StocksController < ApplicationController
     check
   end
 
+  def batch
+     @batch = Stock.where('item_name = ?' , params[:name]).distinct.pluck(:batch_number )
+     render json: @batch
+  end
+
   # POST /stocks
   # POST /stocks.json
   def create
