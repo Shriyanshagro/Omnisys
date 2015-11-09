@@ -9,7 +9,12 @@ Rails.application.routes.draw do
     end
   end
   resources :sales
-  resources :purchases
+  resources :purchases do
+      collection do
+          get 'wholesaler'
+          get 'item'
+      end
+  end
   devise_for :users
 
   root 'purchases#index'
@@ -68,3 +73,4 @@ Rails.application.routes.draw do
   #     resources :products
   #   end
 end
+
