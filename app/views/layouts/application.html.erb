@@ -3,40 +3,47 @@
 <head>
   <title>Omnisys</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'default', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+<link rel="stylesheet" href="/resources/demos/style.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
 </head>
   <title>Omnisys</title>
 <body>
 
         <div class="nav pull-right">
-          <% if current_user %> 
+          <% if current_user %>
             <p>Welcome <strong><%= current_user.email %> </strong> to your online management .</p>
             <table>
-              
-            <tr> 
-              <th><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></th> 
+
+            <tr>
+              <th><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></th>
               <th><%= link_to('PURCHASE',purchases_path)%></th>
-              <th><%= link_to('SALES',sales_path)%></th> 
-              <th><%= link_to('STOCKS',stocks_path)%></th> 
-              <% if current_user.id == 1 %> 
+              <th><%= link_to('SALES',sales_path)%></th>
+              <th><%= link_to('STOCKS',stocks_path)%></th>
+              <% if current_user.id == 1 %>
               <th><%= link_to('Master',masters_path)%></th>
-              <% end %> 
-            </tr> 
+              <% end %>
+            </tr>
           </table>
 
-          <% else %> 
-           <center><strong><p>Welcome to online portal management.Log in to use this service</p></strong></center>   
+          <% else %>
+           <center><strong><p>Welcome to online portal management.Log in to use this service</p></strong></center>
             <table>
-             <tr> 
-              <th><a href="/users/sign_in">Login</a></th> 
+             <tr>
+              <th><a href="/users/sign_in">Login</a></th>
               <th><a href="/users/sign_up">Signup</a></th>
              </tr>
-           </table>  
+           </table>
           <% end %>
 
-        </div>  
+        </div>
     <%= yield %>
 
 </body>
 </html>
+

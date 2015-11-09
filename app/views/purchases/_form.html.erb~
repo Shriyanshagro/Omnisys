@@ -13,12 +13,11 @@
 
   <div class="field">
     <%= f.label :wholesaler %><br>
-    <input name="purchase[wholesaler]" id="tags" type="text" onkeyup="getwholeseller()" ,limit = '2'>
+    <%= f.text_area :wholesaler %>
   </div>
-
   <div class="field">
     <%= f.label :item_name %><br>
-    <input name="purchase[item_name]" id="items" type="text" onkeyup="getitem()" ,limit = '2'>
+    <%= f.text_area :item_name %>
   </div>
   <div class="field">
     <%= f.label :quantity %><br>
@@ -48,25 +47,3 @@
     <%= f.submit %>
   </div>
 <% end %>
-
-  <script>
-
-function getwholeseller() {
-    $.get("<%= url_for(controller: 'purchases', action: 'wholesaler') %>", function(data, status){
-        $( "#tags" ).autocomplete({
-          source: data
-        });
-    });
-};
-
-function getitem() {
-    $.get("<%= url_for(controller: 'purchases', action: 'item') %>", function(data, status){
-        a=data.length;
-        $( "#items" ).autocomplete({
-          source: data
-        });
-    });
-};
-
-</script>
-

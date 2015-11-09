@@ -22,26 +22,26 @@ class PurchasesController < ApplicationController
   def edit
   end
 
+
   # POST /purchases
   # POST /purchases.json
   def create
     @purchase = Purchase.new(purchase_params)
     @purchase.user_id = current_user.id
-
     #find weather given item and uom matches to master table
     validate = Master.find_by(item_name: @purchase.item_name , uom: @purchase.unit_of_measure)
-    
-    
+
+
     # to find the unit_of_measure of least level
     factor = Master.find_by(item_name: @purchase.item_name , level: 1)
 
     respond_to do |format|
      if @purchase.quantity<=0
         format.html { redirect_to @purchase, notice: 'Given quantity is not acceptable.' }
-             
+
      elsif !validate.present?
         format.html { redirect_to @purchase, notice: 'Give correct Item name and corresponding Unit Of measure.' }
-         
+
      else
        # logic to find least count of quantity
        $i=1
@@ -50,7 +50,7 @@ class PurchasesController < ApplicationController
        factor = Master.find_by(item_name: @purchase.item_name , level: $i)
        $total *= factor.units*factor.conversion
        $i += 1
-       end   
+       end
        if @purchase.save
         format.html { redirect_to @purchase, notice: 'Purchase was successfully created.' }
         format.json { render :show, status: :created, location: @purchase }
@@ -61,25 +61,25 @@ class PurchasesController < ApplicationController
 
         if stock.present?
 
-          stock.quantity = stock.quantity + @purchase.quantity*$total  
+          stock.quantity = stock.quantity + @purchase.quantity*$total
           stock.save
 
-        else  
+        else
           stock=Stock.create(user_id: current_user.id , item_name: @purchase.item_name ,
-         batch_number: @purchase.batch_number ,unit_of_measure: factor.uom , 
+         batch_number: @purchase.batch_number ,unit_of_measure: factor.uom ,
          expiry_date: @purchase.expiry_date , quantity:@purchase.quantity*$total)
 
         end
 
         report = Report.find_by(item_name: @purchase.item_name , user_id: current_user.id)
-        if report.present? 
+        if report.present?
           report.value = (@purchase.total_price + report.value*report.quantity)/(@purchase.quantity*$total + report.quantity)
           report.quantity = report.quantity + @purchase.quantity*$total
           report.save
         else
           report=Report.create(user_id:current_user.id , item_name:@purchase.item_name,value:(@purchase.total_price/(@purchase.quantity*$total)),
           quantity:@purchase.quantity*$total)
-        end  
+        end
 
       else
         format.html { render :new }
@@ -87,6 +87,16 @@ class PurchasesController < ApplicationController
       end
      end
     end
+  end
+
+  def wholesaler
+      @wholesaler = Purchase.where("user_id = ?" ,  current_user.id).distinct.pluck(:wholesaler)
+      render json: @wholesaler
+  end
+
+  def item
+     @item = Master.distinct.pluck(:item_name )
+     render json: @item
   end
 
   # PATCH/PUT /purchases/1
@@ -97,7 +107,7 @@ class PurchasesController < ApplicationController
         format.html { redirect_to @purchase, notice: 'Purchase was successfully updated.' }
         format.json { render :show, status: :ok, location: @purchase }
 
-        
+
       else
         format.html { render :edit }
         format.json { render json: @purchase.errors, status: :unprocessable_entity }
@@ -113,7 +123,7 @@ class PurchasesController < ApplicationController
        batch_number: @purchase.batch_number )
 
     if stock.present?
-        stock.quantity = stock.quantity - @purchase.quantity  
+        stock.quantity = stock.quantity - @purchase.quantity
         stock.save
 
     end
@@ -139,3 +149,4 @@ class PurchasesController < ApplicationController
       params.require(:purchase).permit(:wholesaler, :item_name, :quantity, :unit_of_measure, :batch_number, :expiry_date, :date_of_purchase, :total_price)
     end
 end
+
