@@ -13,27 +13,27 @@
 
   <div class="field">
     <%= f.label :wholesaler %><br>
-    <input name="purchase[wholesaler]" id="tags" type="text" onkeyup="getwholeseller()" ,limit = '2'>
+    <input name="purchase[wholesaler]" id="tags" type="text" onkeyup="getwholeseller()" required>
   </div>
 
   <div class="field">
     <%= f.label :item_name %><br>
-    <input name="purchase[item_name]" id="items" type="text" onkeyup="getitem()" ,limit = '2'>
-  </div>
-
-  <div class="field">
-    <%= f.label :quantity %><br>
-    <%= f.number_field :quantity %>
+    <input name="purchase[item_name]" id="items" type="text" onkeyup="getitem()" required>
   </div>
 
   <div class="field">
     <%= f.label :unit_of_measure %><br>
-    <input name="purchase[unit_of_measure]" id="uom" type="text" onkeyup="getuom()" ,limit = '2'>
+    <input name="purchase[unit_of_measure]" id="uom" type="text" onkeyup="getuom()" required>
+  </div>
+
+  <div class="field">
+    <%= f.label :quantity %><br>
+    <input name="purchase[quantity]" type="integer" step="0.000001" required>
   </div>
 
   <div class="field">
     <%= f.label :batch_number %><br>
-    <input name="purchase[batch_number]" id="batch" type="text" onkeyup="getbatch()" ,limit = '2'>
+    <input name="purchase[batch_number]" id="batch" type="text" onkeyup="getbatch()" required>
   </div>
 
   <div class="field">
@@ -48,7 +48,7 @@
 
   <div class="field">
     <%= f.label :total_price %><br>
-    <%= f.text_field :total_price %>
+    <input name="purchase[total_price]" id="total_price" type="number" step="0.000001" required>
   </div>
 
   <div class="actions">
@@ -60,7 +60,7 @@
 
 function getwholeseller() {
     $.get("<%= url_for(controller: 'purchases', action: 'wholesaler') %>", function(data, status){
-          console.log(data);
+        //   console.log(data);
         $( "#tags" ).autocomplete({
           source: data
         });

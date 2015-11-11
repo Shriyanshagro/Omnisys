@@ -28,6 +28,7 @@ class PurchasesController < ApplicationController
   def create
     @purchase = Purchase.new(purchase_params)
     @purchase.user_id = current_user.id
+    time = Time.now
     #find weather given item and uom matches to master table
     validate = Master.find_by(item_name: @purchase.item_name , uom: @purchase.unit_of_measure)
 
@@ -41,6 +42,9 @@ class PurchasesController < ApplicationController
 
      elsif !validate.present?
         format.html { redirect_to @purchase, notice: 'Give correct Item name and corresponding Unit Of measure.' }
+
+    elsif @purchase.expiry_date < time
+        format.html { redirect_to @purchase, notice: 'Product is alreday expired, check the  expiry date' }
 
      else
        # logic to find least count of quantity

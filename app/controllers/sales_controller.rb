@@ -49,6 +49,16 @@ class SalesController < ApplicationController
     stock = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name ,
          batch_number: @sale.batch_number )
 
+ if validate.present?
+             $i=1
+             $total=1
+             while $i <= validate.level
+              factor = Master.find_by(item_name: @sale.item_name , level: $i)
+              $total *= factor.units*factor.conversion
+              $i += 1
+             end
+             mrp=  validate.mrp*$total
+ end
 
 
     respond_to do |format|
@@ -61,19 +71,16 @@ class SalesController < ApplicationController
      elsif !stock.present?
         format.html { redirect_to @sale, notice: 'Given Item and corresponding Unit Of Measure is never purchased.' }
 
+    elsif @sale.total_price > mrp
+        format.html { redirect_to @sale, notice: 'Total selleing price cannot be greater than MRP.' }
+
       # as specified retailer can sale product even if item's quantity is less than required
  #    elsif stock.quantity < @sale.quantity*$total
   #      format.html { redirect_to @sale, notice: 'Required quantity is not available in stock' }
 
      else
       # logic to find least count of quantity
-      $i=1
-      $total=1
-      while $i <= validate.level
-       factor = Master.find_by(item_name: @sale.item_name , level: $i)
-       $total *= factor.units*factor.conversion
-       $i += 1
-      end
+
       if @sale.save
         format.html { redirect_to @sale, notice: 'Sale was successfully created.' }
         format.json { render :show, status: :created, location: @sale }

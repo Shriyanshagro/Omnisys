@@ -23,6 +23,12 @@ class StocksController < ApplicationController
     check
   end
 
+  def expiry_date
+      @date = Stock.where('item_name = ? and batch_number = ? ', params[:item] , params[:batch]).pluck(:expiry_date )
+      render json: @date
+
+  end
+
   def batch
      @batch = Stock.where('item_name = ?' , params[:name]).distinct.pluck(:batch_number )
      render json: @batch
