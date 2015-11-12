@@ -17,7 +17,7 @@
   </div>
   <div class="field">
     <%= f.label :item_name %><br>
-    <input name="sale[item_name]" id="items" type="text" onkeyup="getitem()" required>
+    <input name="sale[item_name]" id="items" type="text" onkeyup="getitem()" onblur="getexpiry_date()" required>
   </div>
 
   <div class="field">
@@ -27,7 +27,7 @@
 
   <div class="field">
     <%= f.label :batch_number %><br>
-    <input name="sale[batch_number]" id="batch" type="text" onkeyup="getbatch()" required>
+    <input name="sale[batch_number]" id="batch" type="text" onkeyup="getbatch()" onblur="getexpiry_date()" required>
   </div>
 
   <div class="field">
@@ -37,7 +37,9 @@
 
   <div class="field">
     <%= f.label :expiry_date %>
-    <p id='expiry'> </p>
+    <p id='expiry'>
+        <%= f.date_select :expiry_date %>
+    </p>
   </div>
 
   <div class="field">
@@ -67,7 +69,7 @@ function getcustomer() {
 };
 
 function getitem() {
-  $.get("<%= url_for(controller: 'sales', action: 'item') %>", function(data, status){
+  $.get("<%= url_for(controller: 'purchases', action: 'item') %>", function(data, status){
       console.log(data);
       $( "#items" ).autocomplete({
         source: data
@@ -100,10 +102,16 @@ function getbatch() {
 function getexpiry_date() {
     item = document.getElementById("items").value
     batch = document.getElementById("batch").value
-    if(item != null  && batch != null)
-    $.get("<%= url_for(controller: 'stocks', action: 'expiry_date' ,item:"") %>"+item+"&batch="+batch , function(data, status){
-        console.log(data);
-    document.getElementById('expiry').innerHTML = "=> "+data;
+    if(item != null  && batch != null){
+        $.get("<%= url_for(controller: 'stocks', action: 'expiry_date' ,item:"") %>"+item+"&batch="+batch , function(data, status){
+            if (data != ""){
+                data = data[0].split('-');
+                document.getElementById('sale_expiry_date_1i').value= parseInt(data[0]);
+                document.getElementById('sale_expiry_date_2i').value= parseInt(data[1]);
+                document.getElementById('sale_expiry_date_3i').value= parseInt(data[2]);
+                document.getElementById('sale_expiry_date_3i').readOnly = true;
+            }
         });
+    }
 };
 </script>

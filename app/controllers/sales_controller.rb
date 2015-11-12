@@ -1,6 +1,7 @@
 class SalesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_sale, only: [:show, :edit, :update, :destroy]
+  before_action :check
 
   # GET /sales
   # GET /sales.json
@@ -31,25 +32,31 @@ class SalesController < ApplicationController
       render json: @customer
   end
 
-  def item
-     @item = Master.distinct.pluck(:item_name )
-     render json: @item
-  end
-
   def create
     @sale = Sale.new(sale_params)
     @sale.user_id = current_user.id
 
     #Now various validations
+    respond_to do |format|
+     if @sale.quantity<=0
+        format.html { redirect_to @sale, notice: 'Given quantity is not acceptable.' }
 
-    #find weather given item and uom matches to master table
-    validate = Master.find_by(item_name: @sale.item_name , uom: @sale.unit_of_measure)
+      # as specified retailer can sale product even if item's quantity is less than required
+ #    elsif stock.quantity < @sale.quantity*$total
+  #      format.html { redirect_to @sale, notice: 'Required quantity is not available in stock' }
+     elsif @sale.total_price<=0
+      format.html { redirect_to @sale, notice: 'Total price less than zero is not exceptable.' }
 
-    # find the required item in stock
-    stock = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name ,
-         batch_number: @sale.batch_number )
+     else
+        #find weather given item and uom matches to master table
+        validate = Master.find_by(item_name: @sale.item_name , uom: @sale.unit_of_measure)
 
- if validate.present?
+        # find the required item in stock
+        if validate.present?
+            stock = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name ,
+                 batch_number: @sale.batch_number )
+
+              # logic to find least count of quantity
              $i=1
              $total=1
              while $i <= validate.level
@@ -57,43 +64,48 @@ class SalesController < ApplicationController
               $total *= factor.units*factor.conversion
               $i += 1
              end
-             mrp=  validate.mrp*$total
- end
+             mrp = validate.mrp * @sale.quantity
+
+             if @sale.total_price > mrp
+                 format.html { redirect_to @sale , notice: 'Total price cannot be greater than maximium selling price.' }
+
+             elsif @sale.save
+               # method to update stock if any item got saled
+                 stock.quantity = stock.quantity - @sale.quantity*$total
+                 stock.save
+               format.html { redirect_to @sale , notice: 'Sale was successfully created.' }
+               format.json { render :show, status: :created, location: @sale }
+
+             else
+               format.json { render json: @sale.errors, status: :unprocessable_entity }
+             end
 
 
-    respond_to do |format|
-     if @sale.quantity<=0
-        format.html { redirect_to @sale, notice: 'Given quantity is not acceptable.' }
-
-     elsif !validate.present?
-        format.html { redirect_to @sale, notice: 'Give correct Item name and corresponding Unit Of measure.' }
-
-     elsif !stock.present?
-        format.html { redirect_to @sale, notice: 'Given Item and corresponding Unit Of Measure is never purchased.' }
-
-    elsif @sale.total_price > mrp
-        format.html { redirect_to @sale, notice: 'Total selleing price cannot be greater than MRP.' }
-
-      # as specified retailer can sale product even if item's quantity is less than required
- #    elsif stock.quantity < @sale.quantity*$total
-  #      format.html { redirect_to @sale, notice: 'Required quantity is not available in stock' }
-
-     else
-      # logic to find least count of quantity
-
-      if @sale.save
-        format.html { redirect_to @sale, notice: 'Sale was successfully created.' }
-        format.json { render :show, status: :created, location: @sale }
-
-        # method to update stock if any item got saled
-          stock.quantity = stock.quantity - @sale.quantity*$total
-          stock.save
+        else
+            stock_item = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name )
+            stock_uom = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name ,
+                  unit_of_measure:@sale.unit_of_measure)
 
 
-      else
-        format.html { render :new }
-        format.json { render json: @sale.errors, status: :unprocessable_entity }
-      end
+            if stock_item.present? and !stock_uom.present?
+                 format.html { redirect_to @sale, notice: 'Only one uom is allowed for personal items.' }
+
+            else
+                stock = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name ,
+                 batch_number: @sale.batch_number ,unit_of_measure:@sale.unit_of_measure)
+
+              if @sale.save
+                # method to update stock if any item got saled
+                  stock.quantity = stock.quantity - @sale.quantity
+                  stock.save
+                format.html { redirect_to @sale , notice: 'Sale was successfully created.' }
+                format.json { render :show, status: :created, location: @sale }
+
+              else
+                format.json { render json: @sale.errors, status: :unprocessable_entity }
+              end
+            end
+        end
      end
     end
   end
@@ -133,9 +145,6 @@ class SalesController < ApplicationController
   end
 
   private
-    def access
-          redirect_to controller: 'sales', action: 'index'
-    end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_sale
@@ -146,5 +155,14 @@ class SalesController < ApplicationController
     def sale_params
       params.require(:sale).permit(:customer, :item_name, :quantity, :unit_of_measure, :batch_number, :expiry_date, :date_of_purchase, :total_price)
     end
+
+    def check
+        if params[:action] == "edit"
+            respond_to do |format|
+              format.html { redirect_to sales_url, notice: 'No access.' }
+              format.json { head :no_content }
+          end
+      end
+  end
 
 end
