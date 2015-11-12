@@ -25,8 +25,9 @@
               <th><%= link_to('PURCHASE',purchases_path)%></th>
               <th><%= link_to('SALES',sales_path)%></th>
               <th><%= link_to('STOCKS',stocks_path)%></th>
+              <th><%= link_to('REORDER',reorder_index_path)%></th>
               <% if current_user.id == 1 %>
-              <th><%= link_to('Master',masters_path)%></th>
+              <th><%= link_to('MASTER',masters_path)%></th>
               <% end %>
             </tr>
           </table>
@@ -46,4 +47,3 @@
 
 </body>
 </html>
-

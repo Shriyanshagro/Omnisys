@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'reorder/index'
+
   resources :masters
   resources :stocks do
     #to pass without any id we use collection
