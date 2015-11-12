@@ -160,7 +160,7 @@ class PurchasesController < ApplicationController
 
   def item
      @item = Master.distinct.pluck(:item_name )
-     @item += Stock.distinct.pluck(:item_name )
+     @item += Stock.where("user_id = ?" , current_user.id).distinct.pluck(:item_name )
     #  now to get distinct items from master and personal list
      @item = @item.uniq
      render json: @item
@@ -172,7 +172,7 @@ class PurchasesController < ApplicationController
             if @uom.present?
                 render json: @uom
             else
-                    @uom = Stock.where("item_name = ?" , params[:name]).distinct.pluck(:unit_of_measure)
+                    @uom = Stock.where("item_name = ? and user_id = ?" , params[:name], current_user.id).distinct.pluck(:unit_of_measure)
                     render json: @uom
             end
 
