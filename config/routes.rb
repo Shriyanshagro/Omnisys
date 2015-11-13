@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   resources :masters
   resources :stocks do
     #to pass without any id we use collection
@@ -23,9 +24,10 @@ Rails.application.routes.draw do
           get 'uom'
       end
   end
-  devise_for :users , :sign_out_via => [ :get, :delete ]
+  devise_for :users 
 
   root 'stocks#index'
+  get 'reorder/index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
