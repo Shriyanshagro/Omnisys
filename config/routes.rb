@@ -24,7 +24,7 @@ Rails.application.routes.draw do
           get 'uom'
       end
   end
-  devise_for :users 
+  devise_for :users , :sign_out_via => [ :get, :delete ]
 
   root 'stocks#index'
   get 'reorder/index'
