@@ -21,7 +21,7 @@
             <table>
 
             <tr>
-              <th><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></th>
+              <th><a href="/users/sign_out">Signout</a></th>
               <th><%= link_to('PURCHASE',purchases_path)%></th>
               <th><%= link_to('SALES',sales_path)%></th>
               <th><%= link_to('STOCKS',stocks_path)%></th>
@@ -46,4 +46,3 @@
 
 </body>
 </html>
-
