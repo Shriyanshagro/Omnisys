@@ -6,7 +6,7 @@
 
 <%= form_tag({controller: "stocks", action: "report"}, method: "get") do %>
   <%= label_tag(:q, "Search for:") %>
-  <%= text_field_tag(:q) %>
+  <input name="q" id="q" type="text" onkeyup="getitem()" required>
   <%= submit_tag("Search") %>
 <% end %>
 
@@ -37,3 +37,18 @@
 
 <br>
 <% end%>
+
+<script>
+
+<script type="text/javascript">
+
+function getitem() {
+    $.get("<%= url_for(controller: 'purchases', action: 'item') %>", function(data, status){
+        console.log(data);
+        $( "#q" ).autocomplete({
+          source: data
+        });
+    });
+};
+
+</script>
