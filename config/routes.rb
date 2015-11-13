@@ -7,7 +7,7 @@ Rails.application.routes.draw do
       get 'correct'
       post 'correct'
       get 'batch'
-      get 'expiry_date' 
+      get 'expiry_date'
     end
   end
   resources :sales do
@@ -23,7 +23,7 @@ Rails.application.routes.draw do
           get 'uom'
       end
   end
-  devise_for :users
+  devise_for :users , :sign_out_via => [ :get, :delete ]
 
   root 'stocks#index'
   # The priority is based upon order of creation: first created -> highest priority.
