@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get 'reorder/index'
 
   resources :masters
   resources :stocks do
@@ -9,7 +8,7 @@ Rails.application.routes.draw do
       get 'correct'
       post 'correct'
       get 'batch'
-      get 'expiry_date' 
+      get 'expiry_date'
     end
   end
   resources :sales do
@@ -28,6 +27,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   root 'stocks#index'
+  get 'reorder/index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
