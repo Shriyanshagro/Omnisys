@@ -13,21 +13,21 @@
 
   <div class="field">
     <%= f.label :customer %><br>
-    <input name="sale[customer]" id="tags" type="text" onkeyup="getcustomer()" required>
+    <input name="sale[customer]" id="tags" type="text" onkeydown="getcustomer()" required>
   </div>
   <div class="field">
     <%= f.label :item_name %><br>
-    <input name="sale[item_name]" id="items" type="text" onkeyup="getitem()" onblur="getexpiry_date()" required>
+    <input name="sale[item_name]" id="items" type="text" onkeydown="getitem()" onblur="getexpiry_date()" required>
   </div>
 
   <div class="field">
     <%= f.label :unit_of_measure %><br>
-    <input name="sale[unit_of_measure]" id="uom" type="text" onkeyup="getuom()" required>
+    <input name="sale[unit_of_measure]" id="uom" type="text" onkeydown="getuom()" required>
   </div>
 
   <div class="field">
     <%= f.label :batch_number %><br>
-    <input name="sale[batch_number]" id="batch" type="text" onkeyup="getbatch()" onblur="getexpiry_date()" required>
+    <input name="sale[batch_number]" id="batch" type="text" onkeydown="getbatch()" onblur="getexpiry_date()" required>
   </div>
 
   <div class="field">

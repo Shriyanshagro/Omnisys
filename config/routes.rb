@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       post 'correct'
       get 'batch'
       get 'expiry_date'
+      get 'item'
     end
   end
   resources :sales do

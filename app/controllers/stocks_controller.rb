@@ -34,6 +34,11 @@ class StocksController < ApplicationController
      render json: @batch
   end
 
+  def item
+      @item = Report.where("user_id = ?" , current_user.id).pluck(:item_name )
+      render json: @item
+  end
+
   # POST /stocks
   # POST /stocks.json
   def create
