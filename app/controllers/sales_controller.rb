@@ -44,6 +44,7 @@ class SalesController < ApplicationController
       # as specified retailer can sale product even if item's quantity is less than required
  #    elsif stock.quantity < @sale.quantity*$total
   #      format.html { redirect_to @sale, notice: 'Required quantity is not available in stock' }
+
      elsif @sale.total_price<=0
       format.html { redirect_to @sale, notice: 'Total price less than zero is not exceptable.' }
 
@@ -56,6 +57,10 @@ class SalesController < ApplicationController
             stock = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name ,
                  batch_number: @sale.batch_number )
 
+         if !stock.present?
+             format.html { redirect_to @sale, notice: 'Item is not in stocks list' }
+
+         else
               # logic to find least count of quantity
              $i=1
              $total=1
@@ -79,7 +84,7 @@ class SalesController < ApplicationController
              else
                format.json { render json: @sale.errors, status: :unprocessable_entity }
              end
-
+         end
 
         else
             stock_item = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name )
@@ -87,7 +92,10 @@ class SalesController < ApplicationController
                   unit_of_measure:@sale.unit_of_measure)
 
 
-            if stock_item.present? and !stock_uom.present?
+            if !stock_item.present?
+                format.html { redirect_to @sale, notice: 'Item is not in stocks list' }
+
+            elsif stock_item.present? and !stock_uom.present?
                  format.html { redirect_to @sale, notice: 'Only one uom is allowed for personal items.' }
 
             else
