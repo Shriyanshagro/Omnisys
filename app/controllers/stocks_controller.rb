@@ -129,6 +129,11 @@ class StocksController < ApplicationController
                   data.quantity= params[:@stocks][:stock][:"#{$i}"][:item_name].to_f
                   data.save
 
+                    report = Report.find_by(item_name: data.item_name , user_id: current_user.id)
+                    report.value = ($value*(params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity) + report.value*report.quantity)/((params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity ) + report.quantity)
+                    report.quantity = report.quantity + (params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity )
+                    report.save
+
               end
 
           end
