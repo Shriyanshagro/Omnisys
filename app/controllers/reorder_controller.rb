@@ -16,10 +16,10 @@ class ReorderController < ApplicationController
       timer = Time.now.strftime("%Y-%m-%d")
       for i in 0..@len
           @name[i] = @report[i].item_name
-          purchase[i] = @report[i].quantity
+          @purchase[i] = @report[i].quantity
           @safe_stock[i] = Stock.where("user_id = ? and item_name = ? and expiry_date > ?" , current_user.id , @report[i].item_name, timer).sum(:quantity)
           @risk_stock[i] = Stock.where("user_id = ? and item_name = ? and expiry_date <= ?" , current_user.id , @report[i].item_name, timer).sum(:quantity)
-          @sold[i] = purchase[i] - @safe_stock[i] - @risk_stock[i]
+          @sold[i] = @purchase[i] - @safe_stock[i] - @risk_stock[i]
           first[i] = Sale.where("user_id = ? and item_name = ?" , current_user.id , @report[i].item_name).first
           if first[i].present?
               first[i] = first[i].date_of_purchase
