@@ -15,6 +15,8 @@
       <th>Sold_Quantity</th>
       <th>Sold_Quantity*3</th>
       <th>time</th>
+      <th>Safe</th>
+      <th>risk</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -29,6 +31,8 @@
         <td><%= @sold[i] %></td>
         <td><%= @sold[i]*3 %></td>
         <td><%= @time[i] %></td>
+        <td><%= @safe_stock[i] %></td>
+        <td><%= @risk_stock[i] %></td>
       </tr>
     <% end %>
   </tbody>
