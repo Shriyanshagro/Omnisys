@@ -2,7 +2,7 @@ class ReorderController < ApplicationController
   def index
       @report = Report.where('user_id = ?', current_user.id).all
       @name = []
-      purchase = []
+      @purchase = []
       @risk_stock = []
       @safe_stock = []
       @sold = []
