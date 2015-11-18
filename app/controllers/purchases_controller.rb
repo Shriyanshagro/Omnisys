@@ -1,6 +1,6 @@
 class PurchasesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_purchase, only: [:show, ]
+  before_action :set_purchase, only: [:show]
   before_action :check
   # GET /purchases
   # GET /purchases.json

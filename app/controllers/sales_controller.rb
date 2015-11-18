@@ -1,6 +1,6 @@
 class SalesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_sale, only: [:show,]
+  before_action :set_sale, only: [:show]
 
   # GET /sales
   # GET /sales.json
@@ -134,16 +134,6 @@ class SalesController < ApplicationController
   # DELETE /sales/1
   # DELETE /sales/1.json
   def destroy
-    # method to update stock when sale got destroyed.
-    stock = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name ,
-       batch_number: @sale.batch_number )
-
-    if stock.present?
-        stock.quantity = stock.quantity + @sale.quantity
-        stock.save
-
-    end
-
     @sale.destroy
     respond_to do |format|
       format.html { redirect_to sales_url, notice: 'Sale was successfully destroyed.' }

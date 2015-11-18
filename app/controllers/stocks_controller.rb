@@ -1,6 +1,6 @@
 class StocksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_stock, only: [ :update]
+  before_action :set_stock, only: [ :update,:show]
   # before_action :logged_in_user, only: [:index]
 
   # GET /stocks
@@ -45,31 +45,113 @@ class StocksController < ApplicationController
   def create
     @stock = Stock.new(stock_params)
     @stock.user_id = current_user.id
-    @stocks = Stock.where("user_id = ? and item_name = ? " ,  current_user.id , @stock.item_name)
+    @item = Stock.where("user_id = ? and item_name = ?" ,  current_user.id , @stock.item_name )
+    @uom = Stock.where("user_id = ? and item_name = ? and unit_of_measure = ?" ,  current_user.id , @stock.item_name , @stock.unit_of_measure)
+    @stocks = Stock.where("user_id = ? and item_name = ? and unit_of_measure = ? and batch_number = ? " ,  current_user.id , @stock.item_name , @stock.unit_of_measure , @stock.batch_number)
     time = Time.now.strftime("%Y-%m-%d")
     respond_to do |format|
         if @stock.expiry_date <= Date.parse(time)
             format.html { redirect_to @stock, notice: 'Product is alreday expired, check the  expiry date' }
+
+        elsif @stock.quantity <= 0
+            format.html { redirect_to @stock, notice: 'Quantity should be positive' }
+
         else
             if !@stocks.present?
-              if @stock.save
-                  time = Time.now.strftime("%Y-%m-%d")
-                  stock=Purchase.create(user_id: current_user.id , wholesaler: "Stock Correction",item_name: @stock.item_name ,
-                 batch_number: @stock.batch_number ,unit_of_measure: @stock.unit_of_measure ,
-                 expiry_date: @stock.expiry_date , quantity:@stock.quantity , date_of_purchase: time)
 
-                  report=Report.create(user_id:current_user.id , item_name:@stock.item_name,value:(1000/(@stock.quantity)),
-                  quantity:@stock.quantity)
+                 master =  Master.where("item_name = ? and uom = ?" , @stock.item_name , @stock.unit_of_measure)
 
-                format.html { redirect_to @stock, notice: 'New Item has been successfully added.' }
-                format.json { render :show, status: :created, location: @stock }
+                #   if item is not in masters then consider it as personal item
+                    if master.present?
+                        # base is master's row with level = 1 , to get base uom
+                        base = Master.where("item_name = ?" , @stock.item_name )
+                        base = base.where("level = ? " , "1")
+                        uom = base.pluck(:uom)
+                        uom = uom[0]
+                        mrp = base.pluck(:mrp)
+                        mrp = mrp[0]
+                        #  onlt if given unit_of_measure is base_uom(level=1)
+                        if uom.to_s == @stock.unit_of_measure.to_s
+                            price = @stock.quantity*mrp
+                            purchase=Purchase.create(user_id: current_user.id , wholesaler: "Stock Correction",item_name: @stock.item_name ,
+                            batch_number: @stock.batch_number ,unit_of_measure: uom ,
+                            expiry_date: @stock.expiry_date , quantity:@stock.quantity , date_of_purchase: time , total_price:price)
 
-              else
-                format.html { render :new }
-                format.json { render json: @stock.errors, status: :unprocessable_entity }
-              end
+                            # update in report
+                            report = Report.find_by(item_name: @stock.item_name , user_id: current_user.id)
+                            if report.present?
+                              report.value = (price + report.value*report.quantity)/(@stock.quantity + report.quantity)
+                              report.quantity = report.quantity + @stock.quantity
+                              report.save
+                            else
+                              report=Report.create(user_id:current_user.id , item_name:@stock.item_name,value:(price/(@stock.quantity)),
+                              quantity:@stock.quantity)
+                            end
+
+                            if @stock.save
+                            format.html { redirect_to @stock, notice: 'New Item has been successfully added.' }
+                            format.json { render :show, status: :created, location: @stock }
+                            else
+                              format.html { render :new }
+                              format.json { render json: @stock.errors, status: :unprocessable_entity }
+                            end
+
+                        else
+                            format.html { redirect_to @stock, notice: 'Item from masters list is only allowed with base unit_of_measure(level=1)' }
+                            format.json { render :show, status: :created, location: @stock }
+                        end
+
+                    else
+                        #  is personal item present in stock
+                        if @item.present?
+                            # only 1 uom is allowed for personal item
+                            if @uom.present?
+                                # find average value of product
+                                report = Report.find_by(item_name: @stock.item_name , user_id: current_user.id)
+                                price = @stock.quantity*report.value
+
+                                purchase=Purchase.create(user_id: current_user.id , wholesaler: "Stock Correction",item_name: @stock.item_name ,
+                                batch_number: @stock.batch_number ,unit_of_measure: @stock.unit_of_measure ,
+                                expiry_date: @stock.expiry_date , quantity:@stock.quantity , date_of_purchase: time , total_price:price)
+
+                                report.value = (price + report.value*report.quantity)/(@stock.quantity + report.quantity)
+                                report.quantity = report.quantity + @stock.quantity
+                                report.save
+
+                                if @stock.save
+                                format.html { redirect_to @stock, notice: 'New Item has been successfully added.' }
+                                format.json { render :show, status: :created, location: @stock }
+                                else
+                                  format.html { render :new }
+                                  format.json { render json: @stock.errors, status: :unprocessable_entity }
+                                end
+
+                            else
+                                #  as defined Personal item with only one unit_of_measure is allowed
+                                format.html { redirect_to @stock, notice: 'Personal item with only one unit_of_measure is allowed' }
+                                format.json { render :show, status: :created, location: @stock }
+                            end
+
+                        else
+                            purchase=Purchase.create(user_id: current_user.id , wholesaler: "Stock Correction",item_name: @stock.item_name ,
+                            batch_number: @stock.batch_number ,unit_of_measure: @stock.unit_of_measure ,
+                            expiry_date: @stock.expiry_date , quantity:@stock.quantity , date_of_purchase: time , total_price:0)
+
+                            report=Report.create(user_id:current_user.id , item_name:@stock.item_name,value:0,
+                            quantity:@stock.quantity)
+
+                            if @stock.save
+                            format.html { redirect_to @stock, notice: 'New Item has been successfully added.' }
+                            format.json { render :show, status: :created, location: @stock }
+                            else
+                              format.html { render :new }
+                              format.json { render json: @stock.errors, status: :unprocessable_entity }
+                            end
+
+                        end
+                    end
             else
-                format.html { redirect_to @stock, notice: 'Item already exist.' }
+                format.html { redirect_to @stock, notice: 'Item with corresponding unit_of_measure and batch number already exist.' }
                 format.json { render json: @stock.errors, status: :unprocessable_entity }
             end
         end

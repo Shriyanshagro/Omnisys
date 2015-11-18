@@ -1,8 +1,8 @@
 class MastersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_master, only: [:show, :edit, :update, :destroy]
   before_action :check
- 
+  before_action :set_master, only: [:show, :edit, :update, :destroy]
+
   # GET /masters
   # GET /masters.json
   def index
@@ -76,9 +76,9 @@ class MastersController < ApplicationController
 
     # global method for authentication
     def check
-        if current_user.id!=1 
+        if current_user.id!=1
           respond_to do |format|
-          format.html { redirect_to purchases_path, notice: "Sorry you don't have access for this page ." }
+          format.html { redirect_to stocks_path, notice: "Sorry you don't have access for this page ." }
           end
         end
     end
