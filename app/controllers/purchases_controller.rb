@@ -1,6 +1,6 @@
 class PurchasesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_purchase, only: [:show,:edit,:update,:delete ]
+  before_action :set_purchase, only: [:show, ]
   before_action :check
   # GET /purchases
   # GET /purchases.json
@@ -35,7 +35,7 @@ class PurchasesController < ApplicationController
      if @purchase.quantity<=0
         format.html { redirect_to @purchase, notice: 'Given quantity is not acceptable.' }
 
-    elsif @purchase.expiry_date < Date.parse(time)
+    elsif @purchase.expiry_date <= Date.parse(time)
         format.html { redirect_to @purchase, notice: 'Product is alreday expired, check the  expiry date' }
 
      else
@@ -220,21 +220,12 @@ class PurchasesController < ApplicationController
     end
 
     def check
-        if params[:action] == "dshf"
+        if params[:action] == "editdf"
             respond_to do |format|
               format.html { redirect_to purchases_url, notice: 'No access.' }
               format.json { head :no_content }
           end
       end
-
-    def logged_in_user
-        if !current_user.id?
-            respond_to do |format|
-              format.html { redirect_to purchases_url, notice: 'No access.' }
-              format.json { head :no_content }
-          end
-        end
-    end
 
   end
 

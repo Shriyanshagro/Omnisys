@@ -1,7 +1,7 @@
 class StocksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_stock, only: [:show, :edit, :update, :destroy]
-  before_action :logged_in_user, only: [:index]
+  before_action :set_stock, only: [ :update]
+  # before_action :logged_in_user, only: [:index]
 
   # GET /stocks
   # GET /stocks.json
@@ -21,7 +21,7 @@ class StocksController < ApplicationController
   end
   # GET /stocks/1/edit
   def edit
-    
+
   end
 
   def expiry_date
@@ -48,7 +48,7 @@ class StocksController < ApplicationController
     @stocks = Stock.where("user_id = ? and item_name = ? " ,  current_user.id , @stock.item_name)
     time = Time.now.strftime("%Y-%m-%d")
     respond_to do |format|
-        if @stock.expiry_date < Date.parse(time)
+        if @stock.expiry_date <= Date.parse(time)
             format.html { redirect_to @stock, notice: 'Product is alreday expired, check the  expiry date' }
         else
             if !@stocks.present?
@@ -172,7 +172,7 @@ class StocksController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_stock
-      @stock = Stock.find(params[:id])
+      @stock = Stock.where("user_id = ?" ,  current_user.id).find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

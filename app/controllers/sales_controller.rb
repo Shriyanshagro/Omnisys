@@ -1,7 +1,6 @@
 class SalesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_sale, only: [:show, :edit, :update, :destroy]
-  before_action :check
+  before_action :set_sale, only: [:show,]
 
   # GET /sales
   # GET /sales.json
@@ -156,7 +155,7 @@ class SalesController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_sale
-      @sale = Sale.find(params[:id])
+      @sale = Sale.where("user_id = ?" ,  current_user.id).find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -164,13 +163,6 @@ class SalesController < ApplicationController
       params.require(:sale).permit(:customer, :item_name, :quantity, :unit_of_measure, :batch_number, :expiry_date, :date_of_purchase, :total_price)
     end
 
-    def check
-        if params[:action] == "edit"
-            respond_to do |format|
-              format.html { redirect_to sales_url, notice: 'No access.' }
-              format.json { head :no_content }
-          end
-      end
   end
 
 end
