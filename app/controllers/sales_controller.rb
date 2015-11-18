@@ -163,6 +163,5 @@ class SalesController < ApplicationController
       params.require(:sale).permit(:customer, :item_name, :quantity, :unit_of_measure, :batch_number, :expiry_date, :date_of_purchase, :total_price)
     end
 
-  end
 
 end
