@@ -1,7 +1,7 @@
 class StocksController < ApplicationController
   before_action :authenticate_user!
+  #  authentiacation to access only show and update the data , not destroy or edit
   before_action :set_stock, only: [ :update,:show]
-  # before_action :logged_in_user, only: [:index]
 
   # GET /stocks
   # GET /stocks.json
@@ -200,8 +200,13 @@ class StocksController < ApplicationController
 
   def correct
       @stocks = Stock.where("user_id = ?" ,  current_user.id).ids
+    #    counter_flag to check wheather stock has been updated or not
       $count = 0
 
+        # params[:@stocks][:stock][:"#{$i}"][:item_name] = params[:@stocks][:stock][:id(in stock table)][:item_name]
+        # [:"#{$i}"] == [:id(in stock table)]
+        # params[:@stocks][:stock][:"#{$i}"][:item_name] = current quantity send by url
+        # "#{$i}" method is used to use variable inside params field
         for $i in @stocks
           if params[:@stocks][:stock][:"#{$i}"][:item_name].present?
               $time = Time.now
@@ -214,6 +219,7 @@ class StocksController < ApplicationController
               if data.quantity > params[:@stocks][:stock][:"#{$i}"][:item_name].to_f
                   # .to_f function changes a string to integer
                   $count+=1
+                #   new sale is created
                   stock=Sale.create(customer:"Stock Correction",user_id: current_user.id , item_name: data.item_name ,
                   batch_number: data.batch_number ,unit_of_measure: data.unit_of_measure ,
                   expiry_date: data.expiry_date , quantity:(data.quantity - params[:@stocks][:stock][:"#{$i}"][:item_name].to_f),date_of_purchase:"#{$time}",total_price:$value*(data.quantity - params[:@stocks][:stock][:"#{$i}"][:item_name].to_f))
@@ -223,6 +229,7 @@ class StocksController < ApplicationController
 
               elsif data.quantity < params[:@stocks][:stock][:"#{$i}"][:item_name].to_f
                   $count+=1
+                #    new purchase created
                   stock=Purchase.create(wholesaler:"Stock Correction",user_id: current_user.id , item_name: data.item_name ,
                   batch_number: data.batch_number ,unit_of_measure: data.unit_of_measure ,
                   expiry_date: data.expiry_date , quantity:(params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity ),date_of_purchase:"#{$time}" , total_price: $value*(params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity))
@@ -230,6 +237,7 @@ class StocksController < ApplicationController
                   data.quantity= params[:@stocks][:stock][:"#{$i}"][:item_name].to_f
                   data.save
 
+                #   update report
                 report = Report.find_by(item_name: data.item_name , user_id: current_user.id)
                 report.value = ($value*(params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity) + report.value*report.quantity)/((params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity ) + report.quantity)
                 report.quantity = report.quantity + (params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity )
@@ -262,9 +270,4 @@ class StocksController < ApplicationController
       params.require(:stock).permit(:item_name, :unit_of_measure, :batch_number, :quantity, :expiry_date)
     end
 
-    def check
-      respond_to do |format|
-          format.html { redirect_to stocks_path, notice: "Sorry you don't have access for this page ." }
-    end
-  end
 end

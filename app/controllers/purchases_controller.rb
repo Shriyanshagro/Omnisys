@@ -1,7 +1,7 @@
 class PurchasesController < ApplicationController
   before_action :authenticate_user!
+  # authenticated to use only show method , i.e it can;t be updated , edit or  destroy
   before_action :set_purchase, only: [:show]
-  before_action :check
   # GET /purchases
   # GET /purchases.json
   def index
@@ -67,6 +67,7 @@ class PurchasesController < ApplicationController
               stock.save
 
             else
+                # method to create stock if any item got purchased
               stock=Stock.create(user_id: current_user.id , item_name: @purchase.item_name ,
              batch_number: @purchase.batch_number ,unit_of_measure: factor.uom ,
              expiry_date: @purchase.expiry_date , quantity:@purchase.quantity*$total)
@@ -153,11 +154,13 @@ class PurchasesController < ApplicationController
     end
   end
 
+#  send all wholesaler in form of json
   def wholesaler
       @wholesaler = Purchase.where("user_id = ?" ,  current_user.id).distinct.pluck(:wholesaler)
       render json: @wholesaler
   end
 
+  #  send all item in form of json
   def item
      @item = Master.distinct.pluck(:item_name )
      @item += Stock.where("user_id = ?" , current_user.id).distinct.pluck(:item_name )
@@ -166,6 +169,7 @@ class PurchasesController < ApplicationController
      render json: @item
   end
 
+  #  send all uom in form of json
   def uom
       if params[:name].present?
             @uom = Master.where("item_name = ?" , params[:name]).distinct.pluck(:uom)
@@ -219,15 +223,6 @@ class PurchasesController < ApplicationController
       params.require(:purchase).permit(:wholesaler, :item_name, :quantity, :unit_of_measure, :batch_number, :expiry_date, :date_of_purchase, :total_price)
     end
 
-    def check
-        if params[:action] == "editdf"
-            respond_to do |format|
-              format.html { redirect_to purchases_url, notice: 'No access.' }
-              format.json { head :no_content }
-          end
-      end
-
-  end
 
 
 end

@@ -1,5 +1,6 @@
 class SalesController < ApplicationController
   before_action :authenticate_user!
+  # authenticated to use only show method , i.e it can;t be updated , edit or  destroy
   before_action :set_sale, only: [:show]
 
   # GET /sales
@@ -26,6 +27,7 @@ class SalesController < ApplicationController
   # POST /sales
   # POST /sales.json
 
+# send all name of customer in form of json
   def customer
       @customer = Sale.where("user_id = ?" ,  current_user.id).distinct.pluck(:customer)
       render json: @customer
@@ -51,13 +53,15 @@ class SalesController < ApplicationController
         #find weather given item and uom matches to master table
         validate = Master.find_by(item_name: @sale.item_name , uom: @sale.unit_of_measure)
 
-        # find the required item in stock
+            #  if item is in masters list
         if validate.present?
+            # find the required item in stock
             stock = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name ,
                  batch_number: @sale.batch_number )
 
+                #   n sale if item is not in stocks "list"
          if !stock.present?
-             format.html { redirect_to @sale, notice: 'Item is not in stocks list' }
+             format.html { redirect_to @sale, notice: 'Item is not in stocks' }
 
          else
               # logic to find least count of quantity
@@ -70,6 +74,7 @@ class SalesController < ApplicationController
              end
              mrp = validate.mrp * @sale.quantity
 
+            #  sale cannot be greater than MRP
              if @sale.total_price > mrp
                  format.html { redirect_to @sale , notice: 'Total price cannot be greater than maximium selling price.' }
 
@@ -90,7 +95,7 @@ class SalesController < ApplicationController
             stock_uom = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name ,
                   unit_of_measure:@sale.unit_of_measure)
 
-
+                #   all possible cases when item saled is from personal list
             if !stock_item.present?
                 format.html { redirect_to @sale, notice: 'Item is not in stocks list' }
 
