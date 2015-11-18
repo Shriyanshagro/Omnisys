@@ -1,6 +1,6 @@
 class PurchasesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_purchase, only: [:show, :edit, :update, :destroy]
+  before_action :set_purchase, only: [:show,:edit,:update,:delete ]
   before_action :check
   # GET /purchases
   # GET /purchases.json
@@ -210,7 +210,7 @@ class PurchasesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_purchase
-      @purchase = Purchase.find(params[:id])
+      @purchase = Purchase.where("user_id = ?" , current_user.id).find(params[:id])
 
     end
 
@@ -220,12 +220,22 @@ class PurchasesController < ApplicationController
     end
 
     def check
-        if params[:action] == "edit"
+        if params[:action] == "dshf"
             respond_to do |format|
               format.html { redirect_to purchases_url, notice: 'No access.' }
               format.json { head :no_content }
           end
       end
+
+    def logged_in_user
+        if !current_user.id?
+            respond_to do |format|
+              format.html { redirect_to purchases_url, notice: 'No access.' }
+              format.json { head :no_content }
+          end
+        end
+    end
+
   end
 
 

@@ -1,6 +1,7 @@
 class StocksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_stock, only: [:show, :edit, :update, :destroy]
+  before_action :logged_in_user, only: [:index]
 
   # GET /stocks
   # GET /stocks.json
@@ -20,7 +21,7 @@ class StocksController < ApplicationController
   end
   # GET /stocks/1/edit
   def edit
-    check
+    
   end
 
   def expiry_date
@@ -42,18 +43,36 @@ class StocksController < ApplicationController
   # POST /stocks
   # POST /stocks.json
   def create
-    @stock = Stock.new(purchase_params)
+    @stock = Stock.new(stock_params)
     @stock.user_id = current_user.id
+    @stocks = Stock.where("user_id = ? and item_name = ? " ,  current_user.id , @stock.item_name)
+    time = Time.now.strftime("%Y-%m-%d")
     respond_to do |format|
-      if @stock.save
-        format.html { redirect_to @stock, notice: 'Purchase was successfully created.' }
-        format.json { render :show, status: :created, location: @stock }
+        if @stock.expiry_date < Date.parse(time)
+            format.html { redirect_to @stock, notice: 'Product is alreday expired, check the  expiry date' }
+        else
+            if !@stocks.present?
+              if @stock.save
+                  time = Time.now.strftime("%Y-%m-%d")
+                  stock=Purchase.create(user_id: current_user.id , wholesaler: "Stock Correction",item_name: @stock.item_name ,
+                 batch_number: @stock.batch_number ,unit_of_measure: @stock.unit_of_measure ,
+                 expiry_date: @stock.expiry_date , quantity:@stock.quantity , date_of_purchase: time)
 
-      else
-        format.html { render :new }
-        format.json { render json: @stock.errors, status: :unprocessable_entity }
-      end
+                  report=Report.create(user_id:current_user.id , item_name:@stock.item_name,value:(1000/(@stock.quantity)),
+                  quantity:@stock.quantity)
 
+                format.html { redirect_to @stock, notice: 'New Item has been successfully added.' }
+                format.json { render :show, status: :created, location: @stock }
+
+              else
+                format.html { render :new }
+                format.json { render json: @stock.errors, status: :unprocessable_entity }
+              end
+            else
+                format.html { redirect_to @stock, notice: 'Item already exist.' }
+                format.json { render json: @stock.errors, status: :unprocessable_entity }
+            end
+        end
     end
   end
 
@@ -129,10 +148,10 @@ class StocksController < ApplicationController
                   data.quantity= params[:@stocks][:stock][:"#{$i}"][:item_name].to_f
                   data.save
 
-                    report = Report.find_by(item_name: data.item_name , user_id: current_user.id)
-                    report.value = ($value*(params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity) + report.value*report.quantity)/((params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity ) + report.quantity)
-                    report.quantity = report.quantity + (params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity )
-                    report.save
+                report = Report.find_by(item_name: data.item_name , user_id: current_user.id)
+                report.value = ($value*(params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity) + report.value*report.quantity)/((params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity ) + report.quantity)
+                report.quantity = report.quantity + (params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity )
+                report.save
 
               end
 
