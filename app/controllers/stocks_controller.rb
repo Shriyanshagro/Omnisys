@@ -234,8 +234,6 @@ class StocksController < ApplicationController
                   batch_number: data.batch_number ,unit_of_measure: data.unit_of_measure ,
                   expiry_date: data.expiry_date , quantity:(params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity ),date_of_purchase:"#{$time}" , total_price: $value*(params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity))
 
-                  data.quantity= params[:@stocks][:stock][:"#{$i}"][:item_name].to_f
-                  data.save
 
                 #   update report
                 report = Report.find_by(item_name: data.item_name , user_id: current_user.id)
@@ -243,6 +241,8 @@ class StocksController < ApplicationController
                 report.quantity = report.quantity + (params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity )
                 report.save
 
+                  data.quantity= params[:@stocks][:stock][:"#{$i}"][:item_name].to_f
+                  data.save
               end
 
           end
