@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
 
-  resources :masters
+    #  to get id along in url use member otherwise collection
+  resources :masters do
+      member do
+          get 'delete'
+      end
+  end
   resources :stocks do
     #to pass without any id we use collection
     collection  do

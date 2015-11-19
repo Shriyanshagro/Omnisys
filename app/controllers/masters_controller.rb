@@ -1,7 +1,7 @@
 class MastersController < ApplicationController
   before_action :authenticate_user!
   before_action :check
-  before_action :set_master, only: [:show, :edit, :update, :destroy]
+  before_action :set_master, only: [:show, :edit, :update]
 
   # GET /masters
   # GET /masters.json
@@ -57,6 +57,16 @@ class MastersController < ApplicationController
   # DELETE /masters/1.json
   def destroy
     @master.destroy
+    respond_to do |format|
+      format.html { redirect_to masters_url, notice: 'Master was successfully destroyed.' }
+      format.json { head :no_content }
+    end
+  end
+
+  # /masters/1/delete
+  def delete
+    id = params[:id]
+    Master.find(id).destroy
     respond_to do |format|
       format.html { redirect_to masters_url, notice: 'Master was successfully destroyed.' }
       format.json { head :no_content }
