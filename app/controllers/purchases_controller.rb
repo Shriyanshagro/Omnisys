@@ -149,29 +149,35 @@ class PurchasesController < ApplicationController
     end
   end
 
-#  send all wholesaler in form of json
+#   to send all wholesaler names ,associated to a specific user_id ,in form of json
   def wholesaler
       @wholesaler = Purchase.where("user_id = ?" ,  current_user.id).distinct.pluck(:wholesaler)
-      render json: @wholesaler
+  #   send date in form of json
+  render json: @wholesaler
   end
 
-  #  send all item in form of json
+#   to send item names' of particualar items ,associated to a specific user_id and master list ,in form of json
   def item
      @item = Master.distinct.pluck(:item_name )
      @item += Stock.where("user_id = ?" , current_user.id).distinct.pluck(:item_name )
     #  now to get distinct items from master and personal list
      @item = @item.uniq
+     #   send date in form of json
      render json: @item
   end
 
-  #  send all uom in form of json
+#   to send unit_of_measures(uom) of a particualar item ,in form of json
   def uom
+      #   conditions => in Url item_name(:name) should be available
+      #  Url generated from Js script function => getuom() of _form.html.erb file under Views of different controllers
       if params[:name].present?
             @uom = Master.where("item_name = ?" , params[:name]).distinct.pluck(:uom)
             if @uom.present?
+                #   send date in form of json
                 render json: @uom
             else
                     @uom = Stock.where("item_name = ? and user_id = ?" , params[:name], current_user.id).distinct.pluck(:unit_of_measure)
+                    #   send date in form of json
                     render json: @uom
             end
 

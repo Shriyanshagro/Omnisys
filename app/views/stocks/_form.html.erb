@@ -38,21 +38,27 @@
   </div>
 <% end %>
 
+<!--  Js functions -->
 <script>
 
+// function for auto-suggestion of item names from db
 function getitem() {
+    //  Url generated will call action:item under controller:purchases to fetch list of already present item in db
   $.get("<%= url_for(controller: 'purchases', action: 'item') %>", function(data, status){
-      console.log(data);
+    //   console.log(data);
       $( "#items" ).autocomplete({
         source: data
       });
   });
 };
 
+// function for auto-suggestion of unit_of_measure available for a specific item
 function getuom() {
+    // var item will fetch item name filled by user
     item = document.getElementById("items").value
+    //  Url generated will call action:uom under controller:purchases to fetch list of unit_of_measure available for a specific item in db
     $.get("<%= url_for(controller: 'purchases', action: 'uom' ,name:"") %>"+item , function(data, status){
-          console.log(data);
+        //   console.log(data);
         $( "#uom" ).autocomplete({
           source: data
         });
