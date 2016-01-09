@@ -27,9 +27,15 @@ class SalesController < ApplicationController
   # POST /sales
   # POST /sales.json
 
-# send all name of customer in form of json
+  #   to send expiry date of particualar item_name ,associated to a specific batch_number and user_id ,in form of json
+      #   conditions => in Url item,batch should be available
+      #  Url generated from Js script function => getexpiry_date() of _form.html.erb file under Views of different controllers
+      #   send date in form of json
+
+#   to send customer names' associated to a specific user_id ,in form of json
   def customer
       @customer = Sale.where("user_id = ?" ,  current_user.id).distinct.pluck(:customer)
+  #   send date in form of json
       render json: @customer
   end
 
@@ -82,6 +88,32 @@ class SalesController < ApplicationController
                # method to update stock if any item got saled
                  stock.quantity = stock.quantity - @sale.quantity*$total
                  stock.save
+
+                 #   handling total sold in Order table
+                 order = Order.find_by(item_name: @sale.item_name , user_id: current_user.id)
+
+                 if order.present?
+                     order.sold = order.sold + (@sale.quantity*$total )
+                     if order.last < @sale.date_of_purchase
+                     order.last = @sale.date_of_purchase
+                     end
+                     if order.first > @sale.date_of_purchase
+                         order.first = @sale.date_of_purchase
+                     end
+                     order.save
+                 else
+                     order = Order.create(user_id:current_user.id , item_name:@sale.item_name,
+                     sold:@sale.quantity*$total,first:@sale.date_of_purchase,last:@sale.date_of_purchase)
+                 end
+
+                 #   in case when there is some conflicts between stock correction and manual feeding
+                 order = Order.find_by(item_name: @sale.item_name , user_id: current_user.id)
+                 if order.present? and order.last < order.first
+                     temp= order.last
+                     order.last = order.first
+                     order.first = temp
+                     order.save
+                 end
                format.html { redirect_to @sale , notice: 'Sale was successfully created.' }
                format.json { render :show, status: :created, location: @sale }
 
@@ -110,8 +142,35 @@ class SalesController < ApplicationController
                 # method to update stock if any item got saled
                   stock.quantity = stock.quantity - @sale.quantity
                   stock.save
-                format.html { redirect_to @sale , notice: 'Sale was successfully created.' }
-                format.json { render :show, status: :created, location: @sale }
+
+                  #   handling total sold in Order table
+                  order = Order.find_by(item_name: @sale.item_name , user_id: current_user.id)
+
+                  if order.present?
+                      order.sold = order.sold + (@sale.quantity )
+                      if order.last < @sale.date_of_purchase
+                      order.last = @sale.date_of_purchase
+                      end
+                      if order.first > @sale.date_of_purchase
+                          order.first = @sale.date_of_purchase
+                      end
+                      order.save
+                  else
+                      order = Order.create(user_id:current_user.id , item_name:@sale.item_name,
+                      sold:@sale.quantity,first:@sale.date_of_purchase,last:@sale.date_of_purchase)
+                  end
+
+                  #   in case when there is some conflicts between stock correction and manual feeding
+                  order = Order.find_by(item_name: @sale.item_name , user_id: current_user.id)
+                  if order.present? and order.last < order.first
+                      temp= order.last
+                      order.last = order.first
+                      order.first = temp
+                      order.save
+                  end
+
+                    format.html { redirect_to @sale , notice: 'Sale was successfully created.' }
+                    format.json { render :show, status: :created, location: @sale }
 
               else
                 format.json { render json: @sale.errors, status: :unprocessable_entity }

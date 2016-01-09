@@ -42,9 +42,7 @@
     </p>
   </div>
 
-  <div class="field">
-    <%= f.label :date_of_Sale %><br>
-    <%= f.date_select :date_of_purchase %>
+  <div class="field">twojee:date_of_purchase %>
   </div>
 
   <div class="field">
@@ -57,41 +55,51 @@
   </div>
 <% end %>
 
+<!--  JS functions-->
 <script>
 
+// function for auto-suggestion of customer names from db
 function getcustomer() {
+    //  Url generated will call action:customer under controller:sales to fetch list of already present customers in db
   $.get("<%= url_for(controller: 'sales', action: 'customer' , ) %>", function(data, status){
-      console.log(data);
+    //   console.log(data);
       $( "#tags" ).autocomplete({
         source: data
       });
   });
 };
 
+// function for auto-suggestion of item names from db
 function getitem() {
+    //  Url generated will call action:item under controller:purchases to fetch list of already present item in db
   $.get("<%= url_for(controller: 'purchases', action: 'item') %>", function(data, status){
-      console.log(data);
+    //   console.log(data);
       $( "#items" ).autocomplete({
         source: data
       });
   });
 };
 
+// function for auto-suggestion of unit_of_measure available for a specific item
 function getuom() {
+    // var item will fetch item name filled by user
     item = document.getElementById("items").value
+    //  Url generated will call action:uom under controller:purchases to fetch list of unit_of_measure available for a specific item in db
     $.get("<%= url_for(controller: 'purchases', action: 'uom' ,name:"") %>"+item , function(data, status){
-          console.log(data);
+        //   console.log(data);
         $( "#uom" ).autocomplete({
           source: data
         });
     });
 };
 
+// function for auto-suggestion of available batch number from db
 function getbatch() {
+    // var item will fetch item name filled by user
     item = document.getElementById("items").value
-
+    //  Url generated will call action:batch under controller:stocks to fetch list of available batch number in db
     $.get("<%= url_for(controller: 'stocks', action: 'batch' ,name:"") %>"+item , function(data, status){
-          console.log(data);
+        //   console.log(data);
         $( "#batch" ).autocomplete({
           source: data
         });
@@ -100,9 +108,12 @@ function getbatch() {
 };
 
 function getexpiry_date() {
+    // var item will fetch item name filled by user
     item = document.getElementById("items").value
+    // var batch will fetch batch_number filled by user
     batch = document.getElementById("batch").value
     if(item != null  && batch != null){
+        //  Url generated will call action:expiry_date under controller:stocks to fetch expiry date of particular batch in db
         $.get("<%= url_for(controller: 'stocks', action: 'expiry_date' ,item:"") %>"+item+"&batch="+batch , function(data, status){
             if (data != ""){
                 data = data[0].split('-');
