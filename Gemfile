@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+# gives offline capability to the application
+gem 'rack-offline'
 # Bundle install user authentication
 gem 'devise', '~> 3.4.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'

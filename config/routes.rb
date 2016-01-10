@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  match "/application.manifest" => Rails::Offline
   get 'order/index'
 
     #  to get id along in url use member otherwise collection
