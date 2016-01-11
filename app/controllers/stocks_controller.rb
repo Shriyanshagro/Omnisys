@@ -223,48 +223,20 @@ class StocksController < ApplicationController
         # "#{$i}" method is used to use variable inside params field
         for $i in @stocks
           if params[:@stocks][:stock][:"#{$i}"][:item_name].present?
-              $time = Time.now.strftime("%Y-%m-%d")
-
+              $time = Time.now
               # find the requires row in Stock db
               data = Stock.find("#{$i}")
               # find the average value of product
               $value = Report.find_by(item_name: data.item_name , user_id: current_user.id)
               $value = $value.value
               # condition to choose weather to make sale or purchase
-
-              if data.quantity > params[:@stocks][:stock][:"#{$i}"][:item_name].to_f     #   new sale is created
+              if data.quantity > params[:@stocks][:stock][:"#{$i}"][:item_name].to_f
                   # .to_f function changes a string to integer
                   $count+=1
                 #   new sale is created
                   stock=Sale.create(customer:"Stock Correction",user_id: current_user.id , item_name: data.item_name ,
                   batch_number: data.batch_number ,unit_of_measure: data.unit_of_measure ,
                   expiry_date: data.expiry_date , quantity:(data.quantity - params[:@stocks][:stock][:"#{$i}"][:item_name].to_f),date_of_purchase:"#{$time}",total_price:$value*(data.quantity - params[:@stocks][:stock][:"#{$i}"][:item_name].to_f))
-
-                #   handling total sold in Order table
-                  order = Order.find_by(item_name:data.item_name , user_id:current_user.id)
-
-                  if order.present?
-                      order.sold = order.sold + (data.quantity - params[:@stocks][:stock][:"#{$i}"][:item_name].to_f )
-                      if order.last < Date.parse($time)
-                          order.last = "#{$time}"
-                      end
-                      if order.first > Date.parse($time)
-                          order.first = "#{$time}"
-                      end
-                      order.save
-                  else
-                      order = Order.create(user_id:current_user.id , item_name:data.item_name,
-                      sold:(data.quantity - params[:@stocks][:stock][:"#{$i}"][:item_name].to_f ).to_f,first:"#{$time}",last:"#{$time}")
-                  end
-
-                #   in case when there is some conflicts between stock correction and manual feeding
-                  order = Order.find_by(item_name: data.item_name , user_id: current_user.id)
-                  if order.present? and order.last < order.first
-                      temp= order.last
-                      order.last = order.first
-                      order.first = temp
-                      order.save
-                  end
 
                   data.quantity= params[:@stocks][:stock][:"#{$i}"][:item_name].to_f
                   data.save
@@ -276,15 +248,14 @@ class StocksController < ApplicationController
                   batch_number: data.batch_number ,unit_of_measure: data.unit_of_measure ,
                   expiry_date: data.expiry_date , quantity:(params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity ),date_of_purchase:"#{$time}" , total_price: $value*(params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity))
 
-
-                    #   update report
-                    report = Report.find_by(item_name: data.item_name , user_id: current_user.id)
-                    report.value = ($value*(params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity) + report.value*report.quantity)/((params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity ) + report.quantity)
-                    report.quantity = report.quantity + (params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity )
-                    report.save
-
                   data.quantity= params[:@stocks][:stock][:"#{$i}"][:item_name].to_f
                   data.save
+
+                #   update report
+                report = Report.find_by(item_name: data.item_name , user_id: current_user.id)
+                report.value = ($value*(params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity) + report.value*report.quantity)/((params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity ) + report.quantity)
+                report.quantity = report.quantity + (params[:@stocks][:stock][:"#{$i}"][:item_name].to_f - data.quantity )
+                report.save
 
               end
 

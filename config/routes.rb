@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  get 'order/index'
-
     #  to get id along in url use member otherwise collection
   resources :masters do
       member do

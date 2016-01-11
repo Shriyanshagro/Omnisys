@@ -60,6 +60,7 @@ class PurchasesController < ApplicationController
              batch_number: @purchase.batch_number )
 
             if stock.present?
+
               stock.quantity = stock.quantity + @purchase.quantity*$total
               stock.save
 
@@ -141,8 +142,12 @@ class PurchasesController < ApplicationController
          else
              format.html { render :new }
              format.json { render json: @purchase.errors, status: :unprocessable_entity }
+
          end
+
+
      end
+
      end
     end
   end
