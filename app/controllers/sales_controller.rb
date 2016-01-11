@@ -27,9 +27,15 @@ class SalesController < ApplicationController
   # POST /sales
   # POST /sales.json
 
-# send all name of customer in form of json
+  #   to send expiry date of particualar item_name ,associated to a specific batch_number and user_id ,in form of json
+      #   conditions => in Url item,batch should be available
+      #  Url generated from Js script function => getexpiry_date() of _form.html.erb file under Views of different controllers
+      #   send date in form of json
+
+#   to send customer names' associated to a specific user_id ,in form of json
   def customer
       @customer = Sale.where("user_id = ?" ,  current_user.id).distinct.pluck(:customer)
+  #   send date in form of json
       render json: @customer
   end
 

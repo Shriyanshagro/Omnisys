@@ -6,6 +6,7 @@ class StocksController < ApplicationController
   # GET /stocks
   # GET /stocks.json
   def index
+    #   to get list of stocks associated with the current user only
     @stocks = Stock.where("user_id = ?" ,  current_user.id)
   end
 
@@ -24,19 +25,30 @@ class StocksController < ApplicationController
 
   end
 
+#   to send expiry date of particualar item_name ,associated to a specific batch_number and user_id ,in form of json
   def expiry_date
+    #   conditions => in Url item,batch should be available
+    #  Url generated from Js script function => getexpiry_date() of _form.html.erb file under Views of different controllers
       @date = Stock.where('item_name = ? and batch_number = ? and user_id = ? ', params[:item] , params[:batch] , current_user.id).pluck(:expiry_date )
+    #   send date in form of json
       render json: @date
 
   end
 
+  #   to send batch_number of particualar item_name ,associated to a specific user_id ,in form of json
   def batch
+      #   conditions => in Url item should be available
+      #  Url generated from Js script function => getbatch() of _form.html.erb file under Views of different controllers
      @batch = Stock.where('item_name = ? and user_id  = ?' , params[:name], current_user.id).distinct.pluck(:batch_number )
+     #   send batch_number in form of json
      render json: @batch
   end
 
+  #   to send item_names' associated to a specific user_id ,in form of json
   def item
+      #  Url generated from Js script function => getitem() of _form.html.erb file under Views of different controllers
       @item = Report.where("user_id = ?" , current_user.id).pluck(:item_name )
+      #   send item_names' in form of json
       render json: @item
   end
 
@@ -44,7 +56,7 @@ class StocksController < ApplicationController
   # POST /stocks.json
   def create
     @stock = Stock.new(stock_params)
-    @stock.user_id = current_user.id
+    @stock.user_id = current_user.id  # set user_id
     @item = Stock.where("user_id = ? and item_name = ?" ,  current_user.id , @stock.item_name )
     @uom = Stock.where("user_id = ? and item_name = ? and unit_of_measure = ?" ,  current_user.id , @stock.item_name , @stock.unit_of_measure)
     @stocks = Stock.where("user_id = ? and item_name = ? and unit_of_measure = ? and batch_number = ? " ,  current_user.id , @stock.item_name , @stock.unit_of_measure , @stock.batch_number)
@@ -184,6 +196,8 @@ class StocksController < ApplicationController
 
   def report
 
+  #   conditions => in Url variable q should be available
+  #  Url generated from ruby's form_tag  of report.html.erb file under View of stocks controllers
     if params[:q].present?
       @stocks = Stock.where("user_id = ?" ,  current_user.id)
       @stocks = @stocks.where("item_name = ?" ,params[:q]).all
