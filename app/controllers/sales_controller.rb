@@ -65,7 +65,7 @@ class SalesController < ApplicationController
             stock = Stock.find_by(user_id: current_user.id , item_name: @sale.item_name ,
                  batch_number: @sale.batch_number )
 
-                #   n sale if item is not in stocks "list"
+                #   no sale if item is not in stocks "list"
          if !stock.present?
              format.html { redirect_to @sale, notice: 'Item is not in stocks' }
 
