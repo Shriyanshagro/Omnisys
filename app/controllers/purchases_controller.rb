@@ -43,8 +43,6 @@ class PurchasesController < ApplicationController
     validate = Master.find_by(item_name: @purchase.item_name , uom: @purchase.unit_of_measure)
 
      if validate.present?
-        # to find the unit_of_measure of least level
-        factor = Master.find_by(item_name: @purchase.item_name , level: 1)
        # logic to find least count of quantity
         $i=1
         $total=1

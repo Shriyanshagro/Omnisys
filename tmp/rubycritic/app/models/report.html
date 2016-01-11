@@ -28,7 +28,7 @@
 
   <span class="file-committed-at">
     
-      Updated <time class='js-timeago' datetime='2015-11-01 02:52:14 +0530'>2015-11-01 02:52:14 +0530</time>
+      Updated <time class='js-timeago' datetime='2016-01-11 11:26:14 +0530'>2016-01-11 11:26:14 +0530</time>
     
   </span>
 
@@ -40,7 +40,7 @@
       N/A complexity per method
     </div>
     <div class="file-stat">
-      1 churn
+      2 churn
     </div>
     <div class="file-stat">
       0 methods
@@ -51,11 +51,10 @@
   </div>
 
   
-    <button id="js-toggle-smells" class="smells-toggle-button button">Toggle Smells</button>
-  
 </div>
 
-<code class="prettyprint linenums lang-ruby file-code js-file-code">class Report &lt; ActiveRecord::Base<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(IrresponsibleModule) Report has no descriptive comment          </span>  </li></ul>
+<code class="prettyprint linenums lang-ruby file-code js-file-code">class Report &lt; ActiveRecord::Base
+    belongs_to :user
 end
 </code>
 
