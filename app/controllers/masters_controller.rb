@@ -53,17 +53,7 @@ class MastersController < ApplicationController
     end
   end
 
-  # DELETE /masters/1
-  # DELETE /masters/1.json
-  def destroy
-    @master.destroy
-    respond_to do |format|
-      format.html { redirect_to masters_url, notice: 'Master was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
-  # /masters/1/delete
+   # /masters/1/delete
   def delete
     id = params[:id]
     Master.find(id).destroy

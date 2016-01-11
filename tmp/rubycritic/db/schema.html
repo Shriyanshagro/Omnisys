@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>RubyCritic</title>
+    <link href="../assets/stylesheets/application.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+    <link href="../assets/stylesheets/prettify.custom_theme.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <header class="project-header group">
+      <div class="container">
+        <h1 class="logo"><a href="../overview.html" class="logo-link">RubyCritic</a></h1>
+        <nav class="project-nav">
+          <a href="../overview.html" class="project-nav-item">Overview</a>
+          <a href="../code_index.html" class="project-nav-item">Code</a>
+          <a href="../smells_index.html" class="project-nav-item">Smells</a>
+        </nav>
+      </div>
+    </header>
+    <div class="container">
+      <div class="file-header group rated">
+  <span class="rating rating-c circled-text circle">
+    C
+  </span>
+  <h2 class="file-name">Schema</h2>
+
+  <span class="file-committed-at">
+    
+      Updated <time class='js-timeago' datetime='2015-11-19 20:52:06 +0530'>2015-11-19 20:52:06 +0530</time>
+    
+  </span>
+
+  <div class="file-stats group">
+    <div class="file-stat">
+      94 complexity
+    </div>
+    <div class="file-stat">
+      N/A complexity per method
+    </div>
+    <div class="file-stat">
+      7 churn
+    </div>
+    <div class="file-stat">
+      0 methods
+    </div>
+    <div class="file-stat">
+      136 duplication
+    </div>
+  </div>
+
+  
+    <button id="js-toggle-smells" class="smells-toggle-button button">Toggle Smells</button>
+  
+</div>
+
+<code class="prettyprint linenums lang-ruby file-code js-file-code"># encoding: UTF-8
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
+#
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# you&#39;ll amass, the slower it&#39;ll run and the greater likelihood for issues).
+#
+# It&#39;s strongly recommended that you check this file into your version control system.
+
+ActiveRecord::Schema.define(version: 20151119142331) do
+
+  create_table &quot;masters&quot;, force: :cascade do |t|
+    t.text     &quot;item_name&quot;,  limit: 65535
+    t.text     &quot;uom&quot;,        limit: 65535
+    t.integer  &quot;units&quot;,      limit: 4
+    t.integer  &quot;level&quot;,      limit: 4
+    t.integer  &quot;conversion&quot;, limit: 4
+    t.float    &quot;mrp&quot;,        limit: 24
+    t.datetime &quot;created_at&quot;,               null: false
+    t.datetime &quot;updated_at&quot;,               null: false
+  end
+
+  create_table &quot;orders&quot;, force: :cascade do |t|
+    t.string   &quot;item_name&quot;,  limit: 255
+    t.integer  &quot;sold&quot;,       limit: 4
+    t.integer  &quot;user_id&quot;,    limit: 4
+    t.datetime &quot;created_at&quot;,             null: false
+    t.datetime &quot;updated_at&quot;,             null: false
+    t.date     &quot;first&quot;
+    t.date     &quot;last&quot;
+  end
+
+  create_table &quot;purchases&quot;, force: :cascade do |t|<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateCode) Similar code found in 2 nodes                        <a href="schema.html#L37" class="js-smell-location">0</a>                  <a href="schema.html#L60" class="js-smell-location">1</a>                  </span>  </li></ul>
+    t.text     &quot;wholesaler&quot;,       limit: 65535
+    t.text     &quot;item_name&quot;,        limit: 65535
+    t.integer  &quot;quantity&quot;,         limit: 4
+    t.text     &quot;unit_of_measure&quot;,  limit: 65535
+    t.text     &quot;batch_number&quot;,     limit: 65535
+    t.date     &quot;expiry_date&quot;
+    t.date     &quot;date_of_purchase&quot;
+    t.float    &quot;total_price&quot;,      limit: 24
+    t.datetime &quot;created_at&quot;,                     null: false
+    t.datetime &quot;updated_at&quot;,                     null: false
+    t.integer  &quot;user_id&quot;,          limit: 4
+  end
+
+  create_table &quot;reports&quot;, force: :cascade do |t|
+    t.text     &quot;item_name&quot;,  limit: 65535
+    t.integer  &quot;user_id&quot;,    limit: 4
+    t.datetime &quot;created_at&quot;,               null: false
+    t.datetime &quot;updated_at&quot;,               null: false
+    t.integer  &quot;quantity&quot;,   limit: 4
+    t.float    &quot;value&quot;,      limit: 24
+  end
+
+  create_table &quot;sales&quot;, force: :cascade do |t|<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateCode) Similar code found in 2 nodes                        <a href="schema.html#L37" class="js-smell-location">0</a>                  <a href="schema.html#L60" class="js-smell-location">1</a>                  </span>  </li></ul>
+    t.text     &quot;customer&quot;,         limit: 65535
+    t.text     &quot;item_name&quot;,        limit: 65535
+    t.integer  &quot;quantity&quot;,         limit: 4
+    t.text     &quot;unit_of_measure&quot;,  limit: 65535
+    t.text     &quot;batch_number&quot;,     limit: 65535
+    t.date     &quot;expiry_date&quot;
+    t.date     &quot;date_of_purchase&quot;
+    t.float    &quot;total_price&quot;,      limit: 24
+    t.datetime &quot;created_at&quot;,                     null: false
+    t.datetime &quot;updated_at&quot;,                     null: false
+    t.integer  &quot;user_id&quot;,          limit: 4
+  end
+
+  create_table &quot;stocks&quot;, force: :cascade do |t|
+    t.text     &quot;item_name&quot;,       limit: 65535
+    t.text     &quot;unit_of_measure&quot;, limit: 65535
+    t.text     &quot;batch_number&quot;,    limit: 65535
+    t.integer  &quot;quantity&quot;,        limit: 4
+    t.date     &quot;expiry_date&quot;
+    t.datetime &quot;created_at&quot;,                    null: false
+    t.datetime &quot;updated_at&quot;,                    null: false
+    t.integer  &quot;user_id&quot;,         limit: 4
+  end
+
+  create_table &quot;users&quot;, force: :cascade do |t|
+    t.string   &quot;email&quot;,               limit: 255, default: &quot;&quot;, null: false
+    t.string   &quot;encrypted_password&quot;,  limit: 255, default: &quot;&quot;, null: false
+    t.datetime &quot;remember_created_at&quot;
+    t.datetime &quot;created_at&quot;
+    t.datetime &quot;updated_at&quot;
+  end
+
+  add_index &quot;users&quot;, [&quot;email&quot;], name: &quot;index_users_on_email&quot;, unique: true, using: :btree
+
+end
+</code>
+
+    </div>
+    <script src='../assets/javascripts/jquery-2.1.0.js'></script>
+    <script src='../assets/javascripts/jquery.tablesorter.js'></script>
+    <script src='../assets/javascripts/jquery.floatThead-v1.2.7.js'></script>
+    <script src='../assets/javascripts/jquery.timeago-v1.4.1.js'></script>
+    <script src='../assets/javascripts/highcharts.src-4.0.1.js'></script>
+    <script src='../assets/javascripts/jquery.scrollTo-1.4.11.js'></script>
+    <script src='../assets/javascripts/prettify-4-Mar-2013.js'></script>
+    <script src='../assets/javascripts/application.js'></script>
+  </body>
+</html>

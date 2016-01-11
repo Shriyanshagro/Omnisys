@@ -23,7 +23,10 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
-
+# optimisation gem
+gem 'rack-mini-profiler'
+# critic view
+gem "rubycritic", :require => false
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -37,6 +40,10 @@ gem 'rails_12factor', '0.0.2'	#for heroku
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
+  # for security vulnerabilities
+    gem 'brakeman', :require => false
+    # Debug your code like a champ
+    gem 'pry-rails'
 end
 
 group :development do

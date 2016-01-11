@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>RubyCritic</title>
+    <link href="../../assets/stylesheets/application.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+    <link href="../../assets/stylesheets/prettify.custom_theme.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <header class="project-header group">
+      <div class="container">
+        <h1 class="logo"><a href="../../overview.html" class="logo-link">RubyCritic</a></h1>
+        <nav class="project-nav">
+          <a href="../../overview.html" class="project-nav-item">Overview</a>
+          <a href="../../code_index.html" class="project-nav-item">Code</a>
+          <a href="../../smells_index.html" class="project-nav-item">Smells</a>
+        </nav>
+      </div>
+    </header>
+    <div class="container">
+      <div class="file-header group rated">
+  <span class="rating rating-d circled-text circle">
+    D
+  </span>
+  <h2 class="file-name">OrderController</h2>
+
+  <span class="file-committed-at">
+    
+      Updated <time class='js-timeago' datetime='2015-11-19 20:52:06 +0530'>2015-11-19 20:52:06 +0530</time>
+    
+  </span>
+
+  <div class="file-stats group">
+    <div class="file-stat">
+      73 complexity
+    </div>
+    <div class="file-stat">
+      73.0 complexity per method
+    </div>
+    <div class="file-stat">
+      8 churn
+    </div>
+    <div class="file-stat">
+      1 methods
+    </div>
+    <div class="file-stat">
+      47 duplication
+    </div>
+  </div>
+
+  
+    <button id="js-toggle-smells" class="smells-toggle-button button">Toggle Smells</button>
+  
+</div>
+
+<code class="prettyprint linenums lang-ruby file-code js-file-code">class OrderController &lt; ApplicationController<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(IrresponsibleModule) OrderController has no descriptive comment          </span>  </li>  <li class="smell old">    <span class="description">(TooManyInstanceVariables) OrderController has at least 7 instance variables          </span>  </li></ul>
+  def index<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(VeryHighComplexity) OrderController#index has a flog score of 73          </span>  </li>  <li class="smell old">    <span class="description">(TooManyStatements) OrderController#index has approx 26 statements          </span>  </li></ul>
+      @report = Order.where(&#39;user_id = ?&#39;, current_user.id).all<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls current_user.id 3 times                        <a href="order_controller.html#L3" class="js-smell-location">0</a>                  <a href="order_controller.html#L22" class="js-smell-location">1</a>                  <a href="order_controller.html#L24" class="js-smell-location">2</a>                  </span>  </li></ul>
+      @name = []
+      @risk_stock = []
+      @safe_stock = []
+      sold = []
+      first = []
+      #   stores last date of sold
+      last = []
+      #   stores time difference of sold
+      time = []
+      reorder_point = []
+      @reorder_quantity = []
+    #   if flag = 2 item needs to reorder
+      @flag = []
+      @len = @report.length - 1
+      timer = Time.now.strftime(&quot;%Y-%m-%d&quot;)
+      for i in 0..@len<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(UncommunicativeVariableName) OrderController#index has the variable name 'i'          </span>  </li></ul>
+          @name[i] = @report[i].item_name<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls @report[i] 6 times                        <a href="order_controller.html#L20" class="js-smell-location">0</a>                  <a href="order_controller.html#L22" class="js-smell-location">1</a>                  <a href="order_controller.html#L24" class="js-smell-location">2</a>                  <a href="order_controller.html#L26" class="js-smell-location">3</a>                  <a href="order_controller.html#L28" class="js-smell-location">4</a>                  <a href="order_controller.html#L31" class="js-smell-location">5</a>                  </span>  </li>  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls @report[i].item_name 3 times                        <a href="order_controller.html#L20" class="js-smell-location">0</a>                  <a href="order_controller.html#L22" class="js-smell-location">1</a>                  <a href="order_controller.html#L24" class="js-smell-location">2</a>                  </span>  </li></ul>
+        #   expiry_date &gt; current date
+          @safe_stock[i] = Stock.where(&quot;user_id = ? and item_name = ? and expiry_date &gt; ?&quot; , current_user.id , @report[i].item_name, timer).sum(:quantity)<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls @report[i] 6 times                        <a href="order_controller.html#L20" class="js-smell-location">0</a>                  <a href="order_controller.html#L22" class="js-smell-location">1</a>                  <a href="order_controller.html#L24" class="js-smell-location">2</a>                  <a href="order_controller.html#L26" class="js-smell-location">3</a>                  <a href="order_controller.html#L28" class="js-smell-location">4</a>                  <a href="order_controller.html#L31" class="js-smell-location">5</a>                  </span>  </li>  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls @report[i].item_name 3 times                        <a href="order_controller.html#L20" class="js-smell-location">0</a>                  <a href="order_controller.html#L22" class="js-smell-location">1</a>                  <a href="order_controller.html#L24" class="js-smell-location">2</a>                  </span>  </li>  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls current_user.id 3 times                        <a href="order_controller.html#L3" class="js-smell-location">0</a>                  <a href="order_controller.html#L22" class="js-smell-location">1</a>                  <a href="order_controller.html#L24" class="js-smell-location">2</a>                  </span>  </li></ul>
+          #   expiry_date &lt;= current date
+          @risk_stock[i] = Stock.where(&quot;user_id = ? and item_name = ? and expiry_date &lt;= ?&quot; , current_user.id , @report[i].item_name, timer).sum(:quantity)<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls @report[i] 6 times                        <a href="order_controller.html#L20" class="js-smell-location">0</a>                  <a href="order_controller.html#L22" class="js-smell-location">1</a>                  <a href="order_controller.html#L24" class="js-smell-location">2</a>                  <a href="order_controller.html#L26" class="js-smell-location">3</a>                  <a href="order_controller.html#L28" class="js-smell-location">4</a>                  <a href="order_controller.html#L31" class="js-smell-location">5</a>                  </span>  </li>  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls @report[i].item_name 3 times                        <a href="order_controller.html#L20" class="js-smell-location">0</a>                  <a href="order_controller.html#L22" class="js-smell-location">1</a>                  <a href="order_controller.html#L24" class="js-smell-location">2</a>                  </span>  </li>  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls current_user.id 3 times                        <a href="order_controller.html#L3" class="js-smell-location">0</a>                  <a href="order_controller.html#L22" class="js-smell-location">1</a>                  <a href="order_controller.html#L24" class="js-smell-location">2</a>                  </span>  </li></ul>
+          # total sale
+            sold[i] = @report[i].sold<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls @report[i] 6 times                        <a href="order_controller.html#L20" class="js-smell-location">0</a>                  <a href="order_controller.html#L22" class="js-smell-location">1</a>                  <a href="order_controller.html#L24" class="js-smell-location">2</a>                  <a href="order_controller.html#L26" class="js-smell-location">3</a>                  <a href="order_controller.html#L28" class="js-smell-location">4</a>                  <a href="order_controller.html#L31" class="js-smell-location">5</a>                  </span>  </li></ul>
+        #   first sale
+          first[i] = @report[i].first<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls @report[i] 6 times                        <a href="order_controller.html#L20" class="js-smell-location">0</a>                  <a href="order_controller.html#L22" class="js-smell-location">1</a>                  <a href="order_controller.html#L24" class="js-smell-location">2</a>                  <a href="order_controller.html#L26" class="js-smell-location">3</a>                  <a href="order_controller.html#L28" class="js-smell-location">4</a>                  <a href="order_controller.html#L31" class="js-smell-location">5</a>                  </span>  </li></ul>
+          if first[i].present?<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls first[i] 2 times                        <a href="order_controller.html#L29" class="js-smell-location">0</a>                  <a href="order_controller.html#L33" class="js-smell-location">1</a>                  </span>  </li></ul>
+              # last sale
+              last[i] = @report[i].last<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls @report[i] 6 times                        <a href="order_controller.html#L20" class="js-smell-location">0</a>                  <a href="order_controller.html#L22" class="js-smell-location">1</a>                  <a href="order_controller.html#L24" class="js-smell-location">2</a>                  <a href="order_controller.html#L26" class="js-smell-location">3</a>                  <a href="order_controller.html#L28" class="js-smell-location">4</a>                  <a href="order_controller.html#L31" class="js-smell-location">5</a>                  </span>  </li></ul>
+          # time between first and last sale
+              time[i] = (last[i] - first[i]).to_i<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls first[i] 2 times                        <a href="order_controller.html#L29" class="js-smell-location">0</a>                  <a href="order_controller.html#L33" class="js-smell-location">1</a>                  </span>  </li></ul>
+              if time[i] != 0<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateCode) Identical code found in 2 nodes                        <a href="order_controller.html#L34" class="js-smell-location">0</a>                  <a href="reorder_controller.html#L39" class="js-smell-location">1</a>                  </span>  </li>  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls time[i] 2 times                        <a href="order_controller.html#L34" class="js-smell-location">0</a>                  <a href="order_controller.html#L35" class="js-smell-location">1</a>                  </span>  </li></ul>
+                  reorder_point[i] = (sold[i]*3)/time[i]<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls time[i] 2 times                        <a href="order_controller.html#L34" class="js-smell-location">0</a>                  <a href="order_controller.html#L35" class="js-smell-location">1</a>                  </span>  </li></ul>
+                  @reorder_quantity[i] = reorder_point[i] * 10<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls reorder_point[i] 2 times                        <a href="order_controller.html#L36" class="js-smell-location">0</a>                  <a href="order_controller.html#L37" class="js-smell-location">1</a>                  </span>  </li></ul>
+                  if reorder_point[i] &gt;= @safe_stock[i]<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls reorder_point[i] 2 times                        <a href="order_controller.html#L36" class="js-smell-location">0</a>                  <a href="order_controller.html#L37" class="js-smell-location">1</a>                  </span>  </li></ul>
+                      @flag[i] = 2
+                  else
+                      @flag[i] = 1<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls @flag[i] = 1 3 times                        <a href="order_controller.html#L40" class="js-smell-location">0</a>                  <a href="order_controller.html#L43" class="js-smell-location">1</a>                  <a href="order_controller.html#L46" class="js-smell-location">2</a>                  </span>  </li></ul>
+                  end
+              else
+                  @flag[i] = 1<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls @flag[i] = 1 3 times                        <a href="order_controller.html#L40" class="js-smell-location">0</a>                  <a href="order_controller.html#L43" class="js-smell-location">1</a>                  <a href="order_controller.html#L46" class="js-smell-location">2</a>                  </span>  </li></ul>
+              end
+          else
+              @flag[i] = 1<ul class="nocode smells js-smells">  <li class="smell old">    <span class="description">(DuplicateMethodCall) OrderController#index calls @flag[i] = 1 3 times                        <a href="order_controller.html#L40" class="js-smell-location">0</a>                  <a href="order_controller.html#L43" class="js-smell-location">1</a>                  <a href="order_controller.html#L46" class="js-smell-location">2</a>                  </span>  </li></ul>
+          end
+      end
+  end
+end
+</code>
+
+    </div>
+    <script src='../../assets/javascripts/jquery-2.1.0.js'></script>
+    <script src='../../assets/javascripts/jquery.tablesorter.js'></script>
+    <script src='../../assets/javascripts/jquery.floatThead-v1.2.7.js'></script>
+    <script src='../../assets/javascripts/jquery.timeago-v1.4.1.js'></script>
+    <script src='../../assets/javascripts/highcharts.src-4.0.1.js'></script>
+    <script src='../../assets/javascripts/jquery.scrollTo-1.4.11.js'></script>
+    <script src='../../assets/javascripts/prettify-4-Mar-2013.js'></script>
+    <script src='../../assets/javascripts/application.js'></script>
+  </body>
+</html>
