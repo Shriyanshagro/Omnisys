@@ -6,6 +6,7 @@ class PurchasesController < ApplicationController
   # GET /purchases.json
   def index
     @purchases = Purchase.where("user_id = ?" ,  current_user.id)
+
   end
 
   # GET /purchases/1
@@ -43,6 +44,8 @@ class PurchasesController < ApplicationController
     validate = Master.find_by(item_name: @purchase.item_name , uom: @purchase.unit_of_measure)
 
      if validate.present?
+        # to find the unit_of_measure of least level
+        factor = Master.find_by(item_name: @purchase.item_name , level: 1)
        # logic to find least count of quantity
         $i=1
         $total=1
@@ -60,7 +63,6 @@ class PurchasesController < ApplicationController
              batch_number: @purchase.batch_number )
 
             if stock.present?
-
               stock.quantity = stock.quantity + @purchase.quantity*$total
               stock.save
 
@@ -142,12 +144,8 @@ class PurchasesController < ApplicationController
          else
              format.html { render :new }
              format.json { render json: @purchase.errors, status: :unprocessable_entity }
-
          end
-
-
      end
-
      end
     end
   end
