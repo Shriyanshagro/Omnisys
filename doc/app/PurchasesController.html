@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="utf-8">
+
+<title>class PurchasesController - Rails Application Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link"><a href="ApplicationController.html">ApplicationController</a>
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-create">#create</a>
+    
+    <li ><a href="#method-i-destroy">#destroy</a>
+    
+    <li ><a href="#method-i-edit">#edit</a>
+    
+    <li ><a href="#method-i-index">#index</a>
+    
+    <li ><a href="#method-i-item">#item</a>
+    
+    <li ><a href="#method-i-new">#new</a>
+    
+    <li ><a href="#method-i-show">#show</a>
+    
+    <li ><a href="#method-i-uom">#uom</a>
+    
+    <li ><a href="#method-i-update">#update</a>
+    
+    <li ><a href="#method-i-wholesaler">#wholesaler</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-PurchasesController">
+  <h1 id="class-PurchasesController" class="class">
+    class PurchasesController
+  </h1>
+
+  <section class="description">
+    
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-create" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>POST /purchases POST /purchases.json</p>
+          
+          
+
+          
+          <div class="method-source-code" id="create-source">
+            <pre><span class="ruby-comment"># File app/controllers/purchases_controller.rb, line 29</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
+  <span class="ruby-ivar">@purchase</span> = <span class="ruby-constant">Purchase</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">purchase_params</span>)
+  <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">user_id</span> = <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>
+
+  <span class="ruby-comment"># stores current date only not</span>
+  <span class="ruby-identifier">time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%Y-%m-%d&quot;</span>)
+  <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">quantity</span><span class="ruby-operator">&lt;=</span><span class="ruby-value">0</span>
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@purchase</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;Given quantity is not acceptable.&#39;</span> }
+
+  <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">expiry_date</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-constant">Date</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">time</span>)
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@purchase</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;Product is alreday expired, check the  expiry date&#39;</span> }
+
+   <span class="ruby-keyword">else</span>
+      <span class="ruby-comment">#find weather given item and uom matches to master table</span>
+  <span class="ruby-identifier">validate</span> = <span class="ruby-constant">Master</span>.<span class="ruby-identifier">find_by</span>(<span class="ruby-identifier">item_name</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">item_name</span> , <span class="ruby-identifier">uom</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">unit_of_measure</span>)
+
+   <span class="ruby-keyword">if</span> <span class="ruby-identifier">validate</span>.<span class="ruby-identifier">present?</span>
+      <span class="ruby-comment"># to find the unit_of_measure of least level</span>
+      <span class="ruby-identifier">factor</span> = <span class="ruby-constant">Master</span>.<span class="ruby-identifier">find_by</span>(<span class="ruby-identifier">item_name</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">item_name</span> , <span class="ruby-identifier">level</span><span class="ruby-operator">:</span> <span class="ruby-value">1</span>)
+     <span class="ruby-comment"># logic to find least count of quantity</span>
+      <span class="ruby-identifier">$i</span>=<span class="ruby-value">1</span>
+      <span class="ruby-identifier">$total</span>=<span class="ruby-value">1</span>
+      <span class="ruby-keyword">while</span> <span class="ruby-identifier">$i</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">validate</span>.<span class="ruby-identifier">level</span>
+          <span class="ruby-identifier">factor</span> = <span class="ruby-constant">Master</span>.<span class="ruby-identifier">find_by</span>(<span class="ruby-identifier">item_name</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">item_name</span> , <span class="ruby-identifier">level</span><span class="ruby-operator">:</span> <span class="ruby-identifier">$i</span>)
+          <span class="ruby-identifier">$total</span> <span class="ruby-operator">*=</span> <span class="ruby-identifier">factor</span>.<span class="ruby-identifier">units</span><span class="ruby-operator">*</span><span class="ruby-identifier">factor</span>.<span class="ruby-identifier">conversion</span>
+          <span class="ruby-identifier">$i</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">factor</span> = <span class="ruby-constant">Master</span>.<span class="ruby-identifier">find_by</span>(<span class="ruby-identifier">item_name</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">item_name</span> , <span class="ruby-identifier">level</span><span class="ruby-operator">:</span> <span class="ruby-value">1</span>)
+
+     <span class="ruby-keyword">if</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">save</span>
+
+         <span class="ruby-comment"># method to update stock if any item got purchased</span>
+          <span class="ruby-identifier">stock</span> = <span class="ruby-constant">Stock</span>.<span class="ruby-identifier">find_by</span>(<span class="ruby-identifier">user_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span> , <span class="ruby-identifier">item_name</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">item_name</span> ,
+           <span class="ruby-identifier">batch_number</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">batch_number</span> )
+
+          <span class="ruby-keyword">if</span> <span class="ruby-identifier">stock</span>.<span class="ruby-identifier">present?</span>
+            <span class="ruby-identifier">stock</span>.<span class="ruby-identifier">quantity</span> = <span class="ruby-identifier">stock</span>.<span class="ruby-identifier">quantity</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">quantity</span><span class="ruby-operator">*</span><span class="ruby-identifier">$total</span>
+            <span class="ruby-identifier">stock</span>.<span class="ruby-identifier">save</span>
+
+          <span class="ruby-keyword">else</span>
+              <span class="ruby-comment"># method to create stock if any item got purchased</span>
+            <span class="ruby-identifier">stock</span>=<span class="ruby-constant">Stock</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">user_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span> , <span class="ruby-identifier">item_name</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">item_name</span> ,
+           <span class="ruby-identifier">batch_number</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">batch_number</span> ,<span class="ruby-identifier">unit_of_measure</span><span class="ruby-operator">:</span> <span class="ruby-identifier">factor</span>.<span class="ruby-identifier">uom</span> ,
+           <span class="ruby-identifier">expiry_date</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">expiry_date</span> , <span class="ruby-identifier">quantity</span><span class="ruby-value">:@purchase</span>.<span class="ruby-identifier">quantity</span><span class="ruby-operator">*</span><span class="ruby-identifier">$total</span>)
+
+          <span class="ruby-keyword">end</span>
+
+          <span class="ruby-identifier">report</span> = <span class="ruby-constant">Report</span>.<span class="ruby-identifier">find_by</span>(<span class="ruby-identifier">item_name</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">item_name</span> , <span class="ruby-identifier">user_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>)
+          <span class="ruby-keyword">if</span> <span class="ruby-identifier">report</span>.<span class="ruby-identifier">present?</span>
+            <span class="ruby-identifier">report</span>.<span class="ruby-identifier">value</span> = (<span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">total_price</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">report</span>.<span class="ruby-identifier">value</span><span class="ruby-operator">*</span><span class="ruby-identifier">report</span>.<span class="ruby-identifier">quantity</span>)<span class="ruby-operator">/</span>(<span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">quantity</span><span class="ruby-operator">*</span><span class="ruby-identifier">$total</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">report</span>.<span class="ruby-identifier">quantity</span>)
+            <span class="ruby-identifier">report</span>.<span class="ruby-identifier">quantity</span> = <span class="ruby-identifier">report</span>.<span class="ruby-identifier">quantity</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">quantity</span><span class="ruby-operator">*</span><span class="ruby-identifier">$total</span>
+            <span class="ruby-identifier">report</span>.<span class="ruby-identifier">save</span>
+          <span class="ruby-keyword">else</span>
+            <span class="ruby-identifier">report</span>=<span class="ruby-constant">Report</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">user_id</span><span class="ruby-value">:current_user</span>.<span class="ruby-identifier">id</span> , <span class="ruby-identifier">item_name</span><span class="ruby-value">:@purchase</span>.<span class="ruby-identifier">item_name</span>,<span class="ruby-identifier">value</span>((<span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">total_price</span><span class="ruby-operator">/</span>(<span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">quantity</span><span class="ruby-operator">*</span><span class="ruby-identifier">$total</span>)),
+            <span class="ruby-identifier">quantity</span><span class="ruby-value">:@purchase</span>.<span class="ruby-identifier">quantity</span><span class="ruby-operator">*</span><span class="ruby-identifier">$total</span>)
+          <span class="ruby-keyword">end</span>
+
+          <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@purchase</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;Purchase was successfully created.&#39;</span> }
+          <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:show</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:created</span>, <span class="ruby-identifier">location</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span> }
+
+      <span class="ruby-keyword">else</span>
+          <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:new</span> }
+          <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:unprocessable_entity</span> }
+
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-comment"># if item is not from masters list but personal</span>
+   <span class="ruby-keyword">else</span>
+       <span class="ruby-keyword">if</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">save</span>
+
+           <span class="ruby-identifier">stock_item</span> = <span class="ruby-constant">Stock</span>.<span class="ruby-identifier">find_by</span>(<span class="ruby-identifier">user_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span> , <span class="ruby-identifier">item_name</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">item_name</span> )
+           <span class="ruby-identifier">stock_uom</span> = <span class="ruby-constant">Stock</span>.<span class="ruby-identifier">find_by</span>(<span class="ruby-identifier">user_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span> , <span class="ruby-identifier">item_name</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">item_name</span> ,
+                 <span class="ruby-identifier">unit_of_measure</span><span class="ruby-value">:@purchase</span>.<span class="ruby-identifier">unit_of_measure</span>)
+
+                 <span class="ruby-comment">#Only one uom is allowed for personal items.</span>
+           <span class="ruby-keyword">if</span> <span class="ruby-identifier">stock_item</span>.<span class="ruby-identifier">present?</span> <span class="ruby-keyword">and</span> <span class="ruby-operator">!</span><span class="ruby-identifier">stock_uom</span>.<span class="ruby-identifier">present?</span>
+                <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@purchase</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;Only one uom is allowed for personal items.&#39;</span> }
+
+                <span class="ruby-comment"># create a new item in personal list</span>
+           <span class="ruby-keyword">elsif</span> <span class="ruby-operator">!</span><span class="ruby-identifier">stock_item</span>.<span class="ruby-identifier">present?</span> <span class="ruby-keyword">and</span> <span class="ruby-operator">!</span><span class="ruby-identifier">stock_uom</span>.<span class="ruby-identifier">present?</span>
+               <span class="ruby-identifier">stock</span>=<span class="ruby-constant">Stock</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">user_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span> , <span class="ruby-identifier">item_name</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">item_name</span> ,
+              <span class="ruby-identifier">batch_number</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">batch_number</span> ,<span class="ruby-identifier">unit_of_measure</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">unit_of_measure</span> ,
+              <span class="ruby-identifier">expiry_date</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">expiry_date</span> , <span class="ruby-identifier">quantity</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">quantity</span>)
+
+              <span class="ruby-identifier">report</span>=<span class="ruby-constant">Report</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">user_id</span><span class="ruby-value">:current_user</span>.<span class="ruby-identifier">id</span> , <span class="ruby-identifier">item_name</span><span class="ruby-value">:@purchase</span>.<span class="ruby-identifier">item_name</span>,<span class="ruby-identifier">value</span>((<span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">total_price</span><span class="ruby-operator">/</span>(<span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">quantity</span>)),
+              <span class="ruby-identifier">quantity</span><span class="ruby-value">:@purchase</span>.<span class="ruby-identifier">quantity</span>)
+
+               <span class="ruby-comment"># update the  stock level</span>
+           <span class="ruby-keyword">elsif</span>  <span class="ruby-identifier">stock_item</span>.<span class="ruby-identifier">present?</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">stock_uom</span>.<span class="ruby-identifier">present?</span>
+
+                       <span class="ruby-identifier">stock</span> = <span class="ruby-constant">Stock</span>.<span class="ruby-identifier">find_by</span>(<span class="ruby-identifier">user_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span> , <span class="ruby-identifier">item_name</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">item_name</span> ,
+                        <span class="ruby-identifier">batch_number</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">batch_number</span> )
+
+                       <span class="ruby-keyword">if</span> <span class="ruby-identifier">stock</span>.<span class="ruby-identifier">present?</span>
+
+                         <span class="ruby-identifier">stock</span>.<span class="ruby-identifier">quantity</span> = <span class="ruby-identifier">stock</span>.<span class="ruby-identifier">quantity</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">quantity</span>
+                         <span class="ruby-identifier">stock</span>.<span class="ruby-identifier">save</span>
+
+                       <span class="ruby-keyword">else</span>
+                         <span class="ruby-identifier">stock</span>=<span class="ruby-constant">Stock</span>.<span class="ruby-identifier">create</span>(<span class="ruby-identifier">user_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span> , <span class="ruby-identifier">item_name</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">item_name</span> ,
+                        <span class="ruby-identifier">batch_number</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">batch_number</span> ,<span class="ruby-identifier">unit_of_measure</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">unit_of_measure</span> ,
+                        <span class="ruby-identifier">expiry_date</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">expiry_date</span> , <span class="ruby-identifier">quantity</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">quantity</span>)
+
+                       <span class="ruby-keyword">end</span>
+                     <span class="ruby-identifier">report</span> = <span class="ruby-constant">Report</span>.<span class="ruby-identifier">find_by</span>(<span class="ruby-identifier">item_name</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">item_name</span> , <span class="ruby-identifier">user_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>)
+                     <span class="ruby-identifier">report</span>.<span class="ruby-identifier">value</span> = (<span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">total_price</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">report</span>.<span class="ruby-identifier">value</span><span class="ruby-operator">*</span><span class="ruby-identifier">report</span>.<span class="ruby-identifier">quantity</span>)<span class="ruby-operator">/</span>(<span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">quantity</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">report</span>.<span class="ruby-identifier">quantity</span>)
+                     <span class="ruby-identifier">report</span>.<span class="ruby-identifier">quantity</span> = <span class="ruby-identifier">report</span>.<span class="ruby-identifier">quantity</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">quantity</span>
+                     <span class="ruby-identifier">report</span>.<span class="ruby-identifier">save</span>
+
+           <span class="ruby-keyword">end</span>
+
+           <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@purchase</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;Purchase was successfully created.&#39;</span> }
+           <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:show</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:created</span>, <span class="ruby-identifier">location</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span> }
+
+       <span class="ruby-keyword">else</span>
+           <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:new</span> }
+           <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:unprocessable_entity</span> }
+       <span class="ruby-keyword">end</span>
+   <span class="ruby-keyword">end</span>
+   <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-destroy" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">destroy</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>DELETE /purchases/1 DELETE /purchases/1.json</p>
+          
+          
+
+          
+          <div class="method-source-code" id="destroy-source">
+            <pre><span class="ruby-comment"># File app/controllers/purchases_controller.rb, line 207</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
+  <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">destroy</span>
+
+  <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">purchases_url</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;Purchase was successfully destroyed.&#39;</span> }
+    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">head</span> <span class="ruby-value">:no_content</span> }
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-edit" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">edit</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>GET /purchases/1/edit</p>
+          
+          
+
+          
+          <div class="method-source-code" id="edit-source">
+            <pre><span class="ruby-comment"># File app/controllers/purchases_controller.rb, line 23</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">edit</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-index" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">index</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>GET /purchases GET /purchases.json</p>
+          
+          
+
+          
+          <div class="method-source-code" id="index-source">
+            <pre><span class="ruby-comment"># File app/controllers/purchases_controller.rb, line 7</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">index</span>
+  <span class="ruby-ivar">@purchases</span> = <span class="ruby-constant">Purchase</span>.<span class="ruby-identifier">where</span>(<span class="ruby-string">&quot;user_id = ?&quot;</span> ,  <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-item" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">item</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>to send item names&#39; of particualar items ,associated to a specific
+user_id and master list ,in form of json</p>
+          
+          
+
+          
+          <div class="method-source-code" id="item-source">
+            <pre><span class="ruby-comment"># File app/controllers/purchases_controller.rb, line 161</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">item</span>
+   <span class="ruby-ivar">@item</span> = <span class="ruby-constant">Master</span>.<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">pluck</span>(<span class="ruby-value">:item_name</span> )
+   <span class="ruby-ivar">@item</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Stock</span>.<span class="ruby-identifier">where</span>(<span class="ruby-string">&quot;user_id = ?&quot;</span> , <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">pluck</span>(<span class="ruby-value">:item_name</span> )
+  <span class="ruby-comment">#  now to get distinct items from master and personal list</span>
+   <span class="ruby-ivar">@item</span> = <span class="ruby-ivar">@item</span>.<span class="ruby-identifier">uniq</span>
+   <span class="ruby-comment">#   send date in form of json</span>
+   <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@item</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>GET /purchases/new</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File app/controllers/purchases_controller.rb, line 18</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@purchase</span> = <span class="ruby-constant">Purchase</span>.<span class="ruby-identifier">new</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-show" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">show</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>GET /purchases/1 GET /purchases/1.json</p>
+          
+          
+
+          
+          <div class="method-source-code" id="show-source">
+            <pre><span class="ruby-comment"># File app/controllers/purchases_controller.rb, line 14</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">show</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-uom" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">uom</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>to send unit_of_measures(uom) of a particualar item ,in form of json</p>
+          
+          
+
+          
+          <div class="method-source-code" id="uom-source">
+            <pre><span class="ruby-comment"># File app/controllers/purchases_controller.rb, line 171</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">uom</span>
+    <span class="ruby-comment">#   conditions =&gt; in Url item_name(:name) should be available</span>
+    <span class="ruby-comment">#  Url generated from Js script function =&gt; getuom() of _form.html.erb file under Views of different controllers</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:name</span>].<span class="ruby-identifier">present?</span>
+          <span class="ruby-ivar">@uom</span> = <span class="ruby-constant">Master</span>.<span class="ruby-identifier">where</span>(<span class="ruby-string">&quot;item_name = ?&quot;</span> , <span class="ruby-identifier">params</span>[<span class="ruby-value">:name</span>]).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">pluck</span>(<span class="ruby-value">:uom</span>)
+          <span class="ruby-keyword">if</span> <span class="ruby-ivar">@uom</span>.<span class="ruby-identifier">present?</span>
+              <span class="ruby-comment">#   send date in form of json</span>
+              <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@uom</span>
+          <span class="ruby-keyword">else</span>
+                  <span class="ruby-ivar">@uom</span> = <span class="ruby-constant">Stock</span>.<span class="ruby-identifier">where</span>(<span class="ruby-string">&quot;item_name = ? and user_id = ?&quot;</span> , <span class="ruby-identifier">params</span>[<span class="ruby-value">:name</span>], <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">pluck</span>(<span class="ruby-value">:unit_of_measure</span>)
+                  <span class="ruby-comment">#   send date in form of json</span>
+                  <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@uom</span>
+          <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-update" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>PATCH/PUT /purchases/1 PATCH/PUT /purchases/1.json</p>
+          
+          
+
+          
+          <div class="method-source-code" id="update-source">
+            <pre><span class="ruby-comment"># File app/controllers/purchases_controller.rb, line 191</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
+  <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">purchase_params</span>)
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@purchase</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;Purchase was successfully updated.&#39;</span> }
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:show</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:ok</span>, <span class="ruby-identifier">location</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span> }
+
+
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-value">:edit</span> }
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@purchase</span>.<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:unprocessable_entity</span> }
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-wholesaler" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">wholesaler</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>to send all wholesaler names ,associated to a specific user_id ,in form of
+json</p>
+          
+          
+
+          
+          <div class="method-source-code" id="wholesaler-source">
+            <pre><span class="ruby-comment"># File app/controllers/purchases_controller.rb, line 154</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">wholesaler</span>
+    <span class="ruby-ivar">@wholesaler</span> = <span class="ruby-constant">Purchase</span>.<span class="ruby-identifier">where</span>(<span class="ruby-string">&quot;user_id = ?&quot;</span> ,  <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">distinct</span>.<span class="ruby-identifier">pluck</span>(<span class="ruby-value">:wholesaler</span>)
+<span class="ruby-comment">#   send date in form of json</span>
+<span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@wholesaler</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
